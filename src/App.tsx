@@ -1,8 +1,13 @@
+import { Container, GlobalStyle } from './styles'
+
 function App() {
   return (
-    <div>
-      <h1>on</h1>
-    </div>
+    <>
+      <GlobalStyle />
+      <Container>
+        <h1>on</h1>
+      </Container>
+    </>
   )
 }
 
