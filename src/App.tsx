@@ -1,15 +1,15 @@
-import ScaleGenerator from './classes/scalegenerator'
+import Interface from './components/interface'
+import PianoKeyboard from './containers/pianokeyboard'
 import { Container, GlobalStyle } from './styles'
-
-const scale = new ScaleGenerator(1)
-scale.getInfo()
 
 function App() {
   return (
     <>
       <GlobalStyle />
       <Container>
-        <h1>on</h1>
+        <Interface>
+          <PianoKeyboard />
+        </Interface>
       </Container>
     </>
   )
