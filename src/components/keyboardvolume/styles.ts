@@ -16,7 +16,7 @@ export const KeyboardVolumeStyled = styled.div`
 `
 export const Thumb = styled.button.attrs<{ $gain: number }>((props) => ({
   style: {
-    top: `${props.$gain - 4}%`
+    bottom: `${props.$gain - 4}%`
   }
 }))`
   background-color: blue;

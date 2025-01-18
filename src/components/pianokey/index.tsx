@@ -1,4 +1,4 @@
-import { PianoKeyProps } from '../../types/propstypes'
+import { PianoKeyProps } from '../../types/props/propstypes'
 import { PianoKeyStyled } from './styles'
 
 const PianoKey = ({ ...props }: PianoKeyProps) => {
