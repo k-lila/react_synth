@@ -5,7 +5,7 @@ export const InterfaceStyled = styled.main`
   width: 98%;
   height: 98%;
   border-radius: 2vmin;
-  background-color: gray;
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
