@@ -7,8 +7,8 @@ const KeyboardVolume = () => {
   const { gain, handleDown, handleMove, handleUp } = useGain({
     ref: volumeRef,
     defaultgain: 70,
-    min: 4,
-    max: 96
+    min: 0,
+    max: 100
   })
 
   return (
@@ -20,8 +20,12 @@ const KeyboardVolume = () => {
       onMouseDown={(e) => handleDown(e.clientY)}
       onMouseMove={(e) => handleMove(e.clientY)}
       onMouseUp={handleUp}
+      onMouseOut={handleUp}
     >
-      <Thumb $gain={gain} />
+      <Thumb
+        $gain={gain}
+        $slide={volumeRef.current ? volumeRef.current.clientHeight : 0}
+      />
     </KeyboardVolumeStyled>
   )
 }

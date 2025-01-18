@@ -16,8 +16,8 @@ const useGain = ({ ...props }: UseGainProps) => {
           props.min,
           props.max
         )
-        setGain(percent)
         console.log(percent)
+        setGain(percent)
       }
     },
     [props.min, props.max, props.ref, sizes.height, sizes.top]
