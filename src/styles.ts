@@ -6,6 +6,14 @@ export const GlobalStyle = createGlobalStyle`
   padding: 0;
   box-sizing: border-box;
   }
+
+  @media screen and (max-width: 767px) {
+  }
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+  }
+  @media screen and (min-width: 1024px) {
+  }
+
 `
 export const Container = styled.div`
   color: white;
