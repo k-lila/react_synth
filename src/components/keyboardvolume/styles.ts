@@ -14,19 +14,18 @@ export const KeyboardVolumeStyled = styled.div`
   @media screen and (min-width: 1024px) {
   }
 `
-export const Thumb = styled.button.attrs<{ $gain: number; $slide: number }>(
+export const Thumb = styled.button.attrs<{ $position: number; $slide: number }>(
   (props) => ({
     style: {
-      transform: `translateY(${(props.$gain / 100) * props.$slide}px)`
+      transform: `translateY(-${(props.$position / 100) * props.$slide}px)`
     }
   })
 )`
   background-color: blue;
   border: none;
   width: 100%;
-  height: 8%;
+  height: 10%;
   position: absolute;
   pointer-events: none;
   bottom: 0;
-  // transform: translateY(-50%, 50%);
 `
