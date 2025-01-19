@@ -9,18 +9,22 @@ const useGain = ({ ...props }: UseGainProps) => {
   const calculateGain = useCallback(
     (clientNum: number) => {
       if (props.ref.current) {
-        const range = sizes.height
-        const percent = getPercent(
-          clientNum - sizes.top,
-          range,
-          props.min,
-          props.max
-        )
-        console.log(percent)
+        const range = props.horizontal ? sizes.width : sizes.height
+        const num = props.horizontal
+          ? clientNum - sizes.left
+          : clientNum - sizes.top
+        const percent = getPercent(num, range, 0, 100, props.horizontal)
         setGain(percent)
       }
     },
-    [props.min, props.max, props.ref, sizes.height, sizes.top]
+    [
+      props.ref,
+      sizes.height,
+      sizes.top,
+      props.horizontal,
+      sizes.width,
+      sizes.left
+    ]
   )
   const handleDown = useCallback(
     (clientNum: number) => {

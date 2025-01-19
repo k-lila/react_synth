@@ -1,6 +1,5 @@
 declare type UseGainProps = {
   ref: React.RefObject<HTMLDivElement>
+  horizontal?: boolean
   defaultgain: number
-  min: number
-  max: number
 }

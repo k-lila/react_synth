@@ -1,3 +1,4 @@
+import BasicSlider from '../../components/basicslider'
 import KeyboardVolume from '../../components/keyboardvolume'
 import PianoKey from '../../components/pianokey'
 import useWindowSize from '../../hooks/usewindowssize'
@@ -15,14 +16,15 @@ const PianoKeyboard = () => {
     keyboardSize = 8
   }
   const keyboard = []
-  for (let i = 0; i < keyboardSize; i++) {
+  for (let i = 0; i < 2; i++) {
     keyboard.push(<PianoKey key={i} pitch={i} />)
   }
 
   return (
     <PianoKeyboardStyled>
-      <KeyboardVolume />
-      <KeyboardContainer>{keyboard}</KeyboardContainer>
+      <BasicSlider defaultgain={50} />
+      <BasicSlider defaultgain={70} horizontal />
+      {/* <KeyboardContainer>{keyboard}</KeyboardContainer> */}
     </PianoKeyboardStyled>
   )
 }
