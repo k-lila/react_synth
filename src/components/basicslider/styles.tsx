@@ -5,7 +5,21 @@ export const BasicSliderStyled = styled.div<{ $horizontal?: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
-  margin: 0 0.25em;
+
+  .markers {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .marker-item {
+    height: 1px;
+    background-color: black;
+  }
+
   @media screen and (max-width: 767px) {
   }
   @media screen and (min-width: 768px) and (max-width: 1023px) {
@@ -13,7 +27,7 @@ export const BasicSliderStyled = styled.div<{ $horizontal?: boolean }>`
   @media screen and (min-width: 1024px) {
   }
 `
-export const Thumb = styled.button.attrs<{
+export const Thumb = styled.div.attrs<{
   $position: number
   $slide: number
   $horizontal?: boolean
@@ -24,8 +38,8 @@ export const Thumb = styled.button.attrs<{
       : `translateY(-${(props.$position / 100) * props.$slide}px)`
   }
 }))`
-  background-color: blue;
-  border: none;
+  border: 2px solid black;
+  border-radius: 0.25em;
   width: ${(props) => (props.$horizontal ? '10%' : '100%')};
   height: ${(props) => (props.$horizontal ? '100%' : '10%')};
   position: absolute;

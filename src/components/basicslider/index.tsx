@@ -6,6 +6,7 @@ import { BasicSliderStyled, Thumb } from './styles'
 type BasicSliderProps = {
   defaultgain: number
   horizontal?: boolean
+  onGainChange?: (gain: number) => void
 }
 
 const BasicSlider = ({ ...props }: BasicSliderProps) => {
@@ -18,11 +19,14 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
   const [thumb, setThumb] = useState(Number)
 
   useEffect(() => {
+    if (props.onGainChange) {
+      props.onGainChange(gain)
+    }
     if (volumeRef.current) {
-      const position = getPercent(gain, 100, 0, 90, true)
+      const position = getPercent(gain, 100, 0, 89, true)
       setThumb(position)
     }
-  }, [gain, thumb, props.horizontal])
+  }, [gain, thumb, props.horizontal, props])
 
   const handleTouchInfo = (event: React.TouchEvent<HTMLDivElement>) => {
     if (props.horizontal) {
@@ -42,6 +46,7 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
 
   return (
     <BasicSliderStyled
+      className="slider__container"
       $horizontal={props.horizontal}
       ref={volumeRef}
       onTouchStart={(e) => handleDown(handleTouchInfo(e))}
@@ -50,9 +55,9 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
       onMouseDown={(e) => handleDown(handleMouseInfo(e))}
       onMouseMove={(e) => handleMove(handleMouseInfo(e))}
       onMouseUp={handleUp}
-      onMouseOut={handleUp}
     >
       <Thumb
+        className="slider__thumb"
         $horizontal={props.horizontal}
         $position={thumb}
         $slide={
@@ -63,6 +68,17 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
             : 0
         }
       />
+      <div className="markers">
+        <div className="marker-item" />
+        <div className="marker-item" />
+        <div className="marker-item" />
+        <div className="marker-item" />
+        <div className="marker-item" />
+        <div className="marker-item" />
+        <div className="marker-item" />
+        <div className="marker-item" />
+        <div className="marker-item" />
+      </div>
     </BasicSliderStyled>
   )
 }
