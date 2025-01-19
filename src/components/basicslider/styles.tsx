@@ -44,5 +44,6 @@ export const Thumb = styled.div.attrs<{
   height: ${(props) => (props.$horizontal ? '100%' : '10%')};
   position: absolute;
   pointer-events: none;
+  transition: all 0.125s;
   bottom: 0;
 `
