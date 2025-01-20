@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import BasicSlider from '../basicslider'
+import BasicSlider from '../basicslider/index'
 import { KeyboardVolumeStyled } from './styles'
 
 const KeyboardVolume = () => {

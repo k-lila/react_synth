@@ -9,25 +9,65 @@ export const KeyboardVolumeStyled = styled.div`
   height: 100%;
   width: 7%;
 
-  .slider__container {
+  /*********** Baseline, reset styles ***********/
+  #slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
   }
 
-  .slider__thumb {
+  /* Removes default focus */
+  #slider:focus {
+    outline: none;
+  }
+
+  /******** Chrome, Safari, Opera and Edge Chromium styles ********/
+  /* slider track */
+  #slider::-webkit-slider-runnable-track {
     background-color: black;
+    border-radius: 0.25rem;
+    height: 2rem;
+    width: 0.5em;
   }
 
-  .marker-item {
-    width: 70%;
-    height: 1px;
-    background-color: black;
+  /* slider thumb */
+  #slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    margin-top: 0px; /* Centers thumb on the track */
+    background-color: #808080;
+    border-radius: 0.25rem;
+    height: 3rem;
+    width: 6rem;
+    transform: translateX(-2.75rem);
   }
 
-  @media screen and (max-width: 767px) {
-    width: 20%;
+  #slider:focus::-webkit-slider-thumb {
+    outline: 3px solid #808080;
+    outline-offset: 0.125rem;
   }
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
-    width: 10%;
+
+  /*********** Firefox styles ***********/
+  /* slider track */
+  #slider::-moz-range-track {
+    background-color: #9ccdde;
+    border-radius: 0.5rem;
+    height: 2rem;
   }
-  @media screen and (min-width: 1024px) {
+
+  /* slider thumb */
+  #slider::-moz-range-thumb {
+    background-color: #808080;
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: 0rem;
+    height: 2rem;
+    width: 1rem;
+  }
+
+  #slider:focus::-moz-range-thumb {
+    outline: 3px solid #808080;
+    outline-offset: 0.125rem;
   }
 `

@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import useGain from '../../hooks/useGain'
-import getPercent from '../../utils/getpercent'
-import { BasicSliderStyled, Thumb } from './styles'
+import { useEffect, useState } from 'react'
+import { BasicSliderStyled } from './styles'
 
 type BasicSliderProps = {
   defaultgain: number
@@ -10,75 +8,24 @@ type BasicSliderProps = {
 }
 
 const BasicSlider = ({ ...props }: BasicSliderProps) => {
-  const volumeRef = useRef<HTMLDivElement>(null)
-  const { gain, handleDown, handleMove, handleUp } = useGain({
-    horizontal: props.horizontal,
-    ref: volumeRef,
-    defaultgain: props.defaultgain
-  })
-  const [thumb, setThumb] = useState(Number)
+  const [gain, setGain] = useState(props.defaultgain)
 
   useEffect(() => {
     if (props.onGainChange) {
       props.onGainChange(gain)
     }
-    if (volumeRef.current) {
-      const position = getPercent(gain, 100, 0, 89, true)
-      setThumb(position)
-    }
-  }, [gain, thumb, props.horizontal, props])
-
-  const handleTouchInfo = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (props.horizontal) {
-      return event.touches[0].clientX
-    } else {
-      return event.touches[0].clientY
-    }
-  }
-
-  const handleMouseInfo = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (props.horizontal) {
-      return event.clientX
-    } else {
-      return event.clientY
-    }
-  }
+  }, [gain, props])
 
   return (
-    <BasicSliderStyled
-      className="slider__container"
-      $horizontal={props.horizontal}
-      ref={volumeRef}
-      onTouchStart={(e) => handleDown(handleTouchInfo(e))}
-      onTouchMove={(e) => handleMove(handleTouchInfo(e))}
-      onTouchEnd={handleUp}
-      onMouseDown={(e) => handleDown(handleMouseInfo(e))}
-      onMouseMove={(e) => handleMove(handleMouseInfo(e))}
-      onMouseUp={handleUp}
-    >
-      <Thumb
-        className="slider__thumb"
-        $horizontal={props.horizontal}
-        $position={thumb}
-        $slide={
-          volumeRef.current
-            ? props.horizontal
-              ? volumeRef.current.clientWidth
-              : volumeRef.current.clientHeight
-            : 0
-        }
+    <BasicSliderStyled>
+      <input
+        id="slider"
+        type="range"
+        value={gain}
+        onChange={(e) => setGain(Number(e.target.value))}
+        min={0}
+        max={100}
       />
-      <div className="markers">
-        <div className="marker-item" />
-        <div className="marker-item" />
-        <div className="marker-item" />
-        <div className="marker-item" />
-        <div className="marker-item" />
-        <div className="marker-item" />
-        <div className="marker-item" />
-        <div className="marker-item" />
-        <div className="marker-item" />
-      </div>
     </BasicSliderStyled>
   )
 }
