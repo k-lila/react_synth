@@ -7,9 +7,9 @@ const KeyboardVolume = () => {
   const handleGain = (gain: number) => {
     setVolume(gain)
   }
-  useEffect(() => {
-    console.log(volume)
-  }, [volume])
+  // useEffect(() => {
+  //   console.log(volume)
+  // }, [volume])
   return (
     <KeyboardVolumeStyled>
       <BasicSlider defaultgain={70} onGainChange={handleGain} />

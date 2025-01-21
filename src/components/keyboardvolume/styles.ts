@@ -7,41 +7,20 @@ export const KeyboardVolumeStyled = styled.div`
   margin: 0;
   padding: 0.25em;
   height: 100%;
-  width: 7%;
-
-  /*********** Baseline, reset styles ***********/
-  #slider {
-    -webkit-appearance: none;
-    appearance: none;
-    background: transparent;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  /* Removes default focus */
-  #slider:focus {
-    outline: none;
-  }
 
   /******** Chrome, Safari, Opera and Edge Chromium styles ********/
-  /* slider track */
   #slider::-webkit-slider-runnable-track {
-    background-color: black;
-    border-radius: 0.25rem;
-    height: 2rem;
-    width: 0.5em;
+    // width: 100%;
   }
-
-  /* slider thumb */
   #slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
+    -webkit-appearance: none;
     appearance: none;
-    margin-top: 0px; /* Centers thumb on the track */
-    background-color: #808080;
+    margin-top: 0px;
+    background-color: gray;
     border-radius: 0.25rem;
     height: 3rem;
-    width: 6rem;
-    transform: translateX(-2.75rem);
+    width: 10em;
+    max-width: 100px;
   }
 
   #slider:focus::-webkit-slider-thumb {
@@ -52,18 +31,18 @@ export const KeyboardVolumeStyled = styled.div`
   /*********** Firefox styles ***********/
   /* slider track */
   #slider::-moz-range-track {
-    background-color: #9ccdde;
-    border-radius: 0.5rem;
-    height: 2rem;
+    background-color: lightgray;
+    height: 100%;
+    width: 10em;
   }
 
   /* slider thumb */
   #slider::-moz-range-thumb {
-    background-color: #808080;
-    border: none; /*Removes extra border that FF applies*/
-    border-radius: 0rem;
-    height: 2rem;
-    width: 1rem;
+    background-color: gray;
+    border-radius: 0.25rem;
+    border: none;
+    height: 3rem;
+    width: 10em;
   }
 
   #slider:focus::-moz-range-thumb {
