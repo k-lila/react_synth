@@ -1,5 +1,5 @@
 import Interface from './components/interface'
-import PianoKeyboard from './containers/pianokeyboard'
+import Harenator from './containers/harenator'
 import { Container, GlobalStyle } from './styles'
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
       <GlobalStyle />
       <Container>
         <Interface>
-          <PianoKeyboard />
+          <Harenator />
         </Interface>
       </Container>
     </>

@@ -9,7 +9,6 @@ type BasicSliderProps = {
 
 const BasicSlider = ({ ...props }: BasicSliderProps) => {
   const [gain, setGain] = useState(props.defaultgain)
-
   useEffect(() => {
     if (props.onGainChange) {
       props.onGainChange(gain)
@@ -25,6 +24,7 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
         onChange={(e) => setGain(Number(e.target.value))}
         min={0}
         max={100}
+        className={props.horizontal ? '' : 'vertical'}
       />
     </BasicSliderStyled>
   )

@@ -5,8 +5,6 @@ export const PianoKeyboardStyled = styled.section`
   width: 100%;
   justify-content: center;
   align-items: center;
-  border: solid 2px black;
-  padding: 1px;
   height: 30vmin;
 
   @media screen and (max-width: 767px) {
