@@ -7,3 +7,7 @@ declare type InterfaceProps = {
 declare type PianoKeyProps = {
   pitch: number
 }
+
+declare type SynthWaveProps = {
+  datavisualization: number[] | undefined
+}
