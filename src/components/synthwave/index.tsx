@@ -11,7 +11,7 @@ const SynthWave = ({ ...props }: SynthWaveProps) => {
     <SynthWaveStyled>
       <div ref={graphref}>
         {props.datavisualization
-          ? LinePlot([props.datavisualization], width, height, 5, 1, 5, 1)
+          ? LinePlot(props.datavisualization, width, height, 5, 1, 5, 1)
           : null}
       </div>
     </SynthWaveStyled>

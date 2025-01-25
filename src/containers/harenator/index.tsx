@@ -4,20 +4,25 @@ import SynthWave from '../../components/synthwave'
 import PianoKeyboard from '../pianokeyboard'
 import { HarenatorStyled } from './styles'
 
-const afinacao = 44100
+const afinacao = 441
 
 const Harenator = () => {
   const notes = new Keyboard(afinacao)
-  const note = notes.keyboard.chromatic[4][9]
-  const teste = new FundamentalWave(44100)
-  teste.setIntensities([1, 0.5, 0.25, 0.1, 0.05, 0.05])
-  teste.createSinContext(note)
-  // const data1 = [teste.getWave()]
-  // const data1 = teste.wavelist
+  const note = notes.keyboard.natural[4][5]
+  const fundamental_sin = new FundamentalWave(44100)
+  // const intensities = [1, 0.5, 0.25, 0.4, 0.2, 0.05]
+  const intensities = [1, 1]
+
+  fundamental_sin.setIntensities(intensities)
+  fundamental_sin.createSinContext(note)
+
+  const wave = fundamental_sin.getWave()
+
+  console.log(fundamental_sin.wavelist)
 
   return (
     <HarenatorStyled>
-      <SynthWave datavisualization={teste.getVisualization()} />
+      <SynthWave datavisualization={fundamental_sin.wavelist} />
       <PianoKeyboard />
     </HarenatorStyled>
   )

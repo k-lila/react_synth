@@ -1,10 +1,8 @@
-import getSingleOscilationSize from './getsingleoscilationsize'
-
 const minBufferSize = (
   samplerate: number,
   pitch: number
 ): { buffersize: number; num: number } => {
-  const oscilationFrameSize = getSingleOscilationSize(samplerate, pitch)
+  const oscilationFrameSize = samplerate / pitch
   let counter = 1
   let trash = (oscilationFrameSize * counter) % 1
   while (trash > 0.01) {
