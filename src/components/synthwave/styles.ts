@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const SynthWaveStyled = styled.div`
   display: flex;
@@ -14,5 +14,4 @@ export const SynthWaveStyled = styled.div`
     width: 100%;
     height: 100%;
   }
-
 `

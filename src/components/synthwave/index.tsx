@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import useComponentSizes from '../../hooks/useComponentSizes'
 import { SynthWaveProps } from '../../types/props/propstypes'
-import LinePlot from '../../utils/d3exemple'
+import LinePlot from '../../utils/lineplot'
 import { SynthWaveStyled } from './styles'
 
 const SynthWave = ({ ...props }: SynthWaveProps) => {
@@ -11,7 +11,7 @@ const SynthWave = ({ ...props }: SynthWaveProps) => {
     <SynthWaveStyled>
       <div ref={graphref}>
         {props.datavisualization
-          ? LinePlot(props.datavisualization, width, height, 5, 1, 5, 1)
+          ? LinePlot([props.datavisualization], width, height, 5, 1, 5, 1)
           : null}
       </div>
     </SynthWaveStyled>

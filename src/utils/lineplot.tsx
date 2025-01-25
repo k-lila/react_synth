@@ -14,7 +14,10 @@ export default function LinePlot(
     [marginLeft, width - marginRight]
   )
   const y = d3.scaleLinear([-1, 1], [height - marginBottom, marginTop])
-  const line = d3.line((_, i) => x(i), y)
+  const line = d3
+    .line<number>()
+    .x((_, i) => x(i))
+    .y((d) => y(d))
   return (
     <svg width={width} height={height}>
       <line
@@ -31,7 +34,7 @@ export default function LinePlot(
             key={i}
             fill="none"
             stroke="black"
-            strokeWidth="3"
+            strokeWidth={`${i + 2}`}
             d={line(m) || undefined}
           />
         )
