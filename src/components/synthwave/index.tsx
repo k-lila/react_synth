@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import useComponentSizes from '../../hooks/useComponentSizes'
 import { SynthWaveProps } from '../../types/props/propstypes'
-import LinePlot from '../../utils/d3exemple'
+import LinePlot from '../../utils/lineplot'
 import { SynthWaveStyled } from './styles'
 
 const SynthWave = ({ ...props }: SynthWaveProps) => {

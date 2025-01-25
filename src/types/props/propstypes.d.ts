@@ -9,5 +9,5 @@ declare type PianoKeyProps = {
 }
 
 declare type SynthWaveProps = {
-  datavisualization: number[] | undefined
+  datavisualization: number[]
 }
