@@ -1,9 +1,13 @@
+import Keyboard from '../../classes/keyboard'
 import KeyboardVolume from '../../components/keyboardvolume'
 import PianoKey from '../../components/pianokey'
 import useWindowSize from '../../hooks/usewindowssize'
 import { KeyboardContainer, PianoKeyboardStyled } from './styles'
 
 const PianoKeyboard = () => {
+  const keyboard_scales = new Keyboard(440)
+  const scale = keyboard_scales.keyboard.chromatic[3]
+
   const { windowsize } = useWindowSize()
   let keyboardSize
   if (windowsize.width < 768) {
@@ -14,8 +18,9 @@ const PianoKeyboard = () => {
     keyboardSize = 8
   }
   const keyboard = []
+
   for (let i = 0; i < keyboardSize; i++) {
-    keyboard.push(<PianoKey key={i} pitch={i} />)
+    keyboard.push(<PianoKey key={i} pitch={scale[i]} />)
   }
 
   return (
