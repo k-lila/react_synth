@@ -3,14 +3,15 @@ import { PianoKeyProps } from '../../types/props/propstypes'
 import { PianoKeyStyled } from './styles'
 
 const PianoKey = ({ ...props }: PianoKeyProps) => {
-  const fundamental = new FundamentalWave(44100)
+  const audioCtx = new AudioContext()
+
+  const fundamental = new FundamentalWave(audioCtx.sampleRate)
   const intensities = [1, 0.3, 0.2, 0.1]
   fundamental.setIntensities(intensities)
-  fundamental.createSawThoothContext(props.pitch)
-  const wave = fundamental.getWave()
+  fundamental.createSinContext(props.pitch)
 
-  const audioCtx = new AudioContext()
-  const buffer = audioCtx.createBuffer(1, wave.length - 1, 44100)
+  const wave = fundamental.getWave()
+  const buffer = audioCtx.createBuffer(1, wave.length - 1, audioCtx.sampleRate)
   const nowBuffering = buffer.getChannelData(0)
   for (let i = 0; i < buffer.length; i++) {
     nowBuffering[i] = wave[i]
@@ -35,7 +36,6 @@ const PianoKey = ({ ...props }: PianoKeyProps) => {
     if (currentSource) {
       currentSource.stop()
       currentSource.disconnect()
-      // currentSource = null
     }
   }
 
