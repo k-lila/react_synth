@@ -5,8 +5,8 @@ import useWindowSize from '../../hooks/usewindowssize'
 import { KeyboardContainer, PianoKeyboardStyled } from './styles'
 
 const PianoKeyboard = () => {
-  const keyboard_scales = new Keyboard(440)
-  const scale = keyboard_scales.keyboard.chromatic[3]
+  const keyboard_scales = new Keyboard(432.1)
+  const scale = keyboard_scales.keyboard.chromatic[4]
 
   const { windowsize } = useWindowSize()
   let keyboardSize
