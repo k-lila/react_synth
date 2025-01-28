@@ -1,21 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import BasicSlider from '../basicslider/index'
 import { KeyboardVolumeStyled } from './styles'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootReducer } from '../../store'
+import { setIntensity } from '../../store/reducers/recipe'
 
 const KeyboardVolume = () => {
-  const [volume, setVolume] = useState(70)
+  const intensity = useSelector((state: RootReducer) => state.recipe.intensity)
+  const dispatch = useDispatch()
+
   const handleGain = (gain: number) => {
-    setVolume(gain)
+    dispatch(setIntensity(gain))
   }
   useEffect(() => {
-    const block = false
+    const block = true
     if (block) {
-      console.log(volume)
+      console.log(intensity)
     }
-  }, [volume])
+  }, [intensity])
   return (
     <KeyboardVolumeStyled>
-      <BasicSlider defaultgain={70} onGainChange={handleGain} />
+      <BasicSlider defaultgain={intensity * 100} onGainChange={handleGain} />
     </KeyboardVolumeStyled>
   )
 }

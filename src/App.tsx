@@ -1,6 +1,8 @@
+import { Provider } from 'react-redux'
 import Interface from './components/interface'
 import Harenator from './containers/harenator'
 import { Container, GlobalStyle } from './styles'
+import store from './store'
 
 function App() {
   return (
@@ -8,7 +10,9 @@ function App() {
       <GlobalStyle />
       <Container>
         <Interface>
-          <Harenator />
+          <Provider store={store}>
+            <Harenator />
+          </Provider>
         </Interface>
       </Container>
     </>

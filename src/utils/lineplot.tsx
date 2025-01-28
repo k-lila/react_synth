@@ -34,7 +34,7 @@ export default function LinePlot(
             key={i}
             fill="none"
             stroke="black"
-            strokeWidth={`${i + 2}`}
+            strokeWidth="1"
             d={line(m) || undefined}
           />
         )

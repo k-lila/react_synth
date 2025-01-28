@@ -22,6 +22,7 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
         type="range"
         value={gain}
         onChange={(e) => setGain(Number(e.target.value))}
+        step={10}
         min={0}
         max={100}
         className={props.horizontal ? '' : 'vertical'}
