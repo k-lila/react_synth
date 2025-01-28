@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BasicSliderStyled } from './styles'
-
-type BasicSliderProps = {
-  defaultgain: number
-  horizontal?: boolean
-  onGainChange?: (gain: number) => void
-}
+import { BasicSliderProps } from '../../types/props/propstypes'
 
 const BasicSlider = ({ ...props }: BasicSliderProps) => {
   const [gain, setGain] = useState(props.defaultgain)
@@ -22,7 +17,7 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
         type="range"
         value={gain}
         onChange={(e) => setGain(Number(e.target.value))}
-        step={10}
+        step={1}
         min={0}
         max={100}
         className={props.horizontal ? '' : 'vertical'}
