@@ -1,26 +1,38 @@
 import { useRef } from 'react'
 import useComponentSizes from '../../hooks/useComponentSizes'
-import { SynthWaveProps } from '../../types/props/propstypes'
 import LinePlot from '../../utils/lineplot'
 import { SynthWaveStyled } from './styles'
+import FundamentalWave from '../../classes/fundamentalwave'
 
-const SynthWave = ({ ...props }: SynthWaveProps) => {
+import usePitchChange from '../../hooks/usePitchChange'
+
+const SynthWave = () => {
+  const { pitch, handlePitchChange } = usePitchChange()
   const graphref = useRef<HTMLDivElement>(null)
   const { height, width } = useComponentSizes(graphref)
+  const fundamental = new FundamentalWave(1000)
+  fundamental.setIntensities([1, 0.2])
+
+  fundamental.createSinContext(1)
+
   return (
     <SynthWaveStyled>
       <div className="graph">
         <div className="graph--plot" ref={graphref}>
-          {props.datavisualization
-            ? LinePlot([props.datavisualization], width, height, 5, 1, 5, 1)
-            : null}
+          {LinePlot([fundamental.getWave()], width, height, 5, 1, 5, 1)}
         </div>
       </div>
       <div className="menu">
         <div>
           <div className="menu--input">
             <label htmlFor="reference">afinação</label>
-            <input type="number" step={0.1} id="reference" />
+            <input
+              type="number"
+              step={0.1}
+              id="reference"
+              value={pitch}
+              onChange={(e) => handlePitchChange(Number(e.target.value))}
+            />
           </div>
           <div className="menu--scales">
             <button>cromatica</button>

@@ -5,6 +5,7 @@ import useWindowSize from '../../hooks/usewindowssize'
 import { KeyboardContainer, PianoKeyboardStyled } from './styles'
 
 const PianoKeyboard = () => {
+  const audioCtx = new AudioContext()
   const keyboard_scales = new Keyboard(432.1)
   const scale = keyboard_scales.keyboard.chromatic[4]
 
@@ -20,7 +21,7 @@ const PianoKeyboard = () => {
   const keyboard = []
 
   for (let i = 0; i < keyboardSize; i++) {
-    keyboard.push(<PianoKey key={i} pitch={scale[i]} />)
+    keyboard.push(<PianoKey key={i} pitch={scale[i]} audioctx={audioCtx} />)
   }
 
   return (
