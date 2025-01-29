@@ -50,4 +50,17 @@ export const SynthWaveStyled = styled.div`
       }
     }
   }
+  @media screen and (max-width: 767px) {
+    margin: 1.75em 0;
+    .graph {
+      width: 65vmin;
+    }
+    .menu {
+      width: 25vmin;
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+  }
+  @media screen and (min-width: 1024px) {
+  }
 `

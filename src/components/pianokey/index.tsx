@@ -1,19 +1,9 @@
-import FundamentalWave from '../../classes/fundamentalwave'
 import usePlayStop from '../../hooks/usePlayStop'
-import { PianoKeyProps } from '../../types/props/propstypes'
+import { PianoKeyProps } from '../../types/propstypes'
 import { PianoKeyStyled } from './styles'
 
 const PianoKey = ({ ...props }: PianoKeyProps) => {
-  const fundamental = new FundamentalWave(props.audioctx.sampleRate)
-  const intensities = [1, 0.5, 0.25, 0.1]
-  fundamental.setIntensities(intensities)
-  fundamental.createSinContext(props.pitch)
-  // fundamental.createSquareContext(props.pitch)
-  // fundamental.createSawThoothContext(props.pitch)
-  const wave = fundamental.getWave()
-
-  const { play, stop } = usePlayStop(wave, props.audioctx)
-
+  const { play, stop } = usePlayStop(props.wavedata, props.audioctx)
   return (
     <PianoKeyStyled>
       <button
@@ -23,7 +13,7 @@ const PianoKey = ({ ...props }: PianoKeyProps) => {
         onTouchStart={play}
         onTouchEnd={stop}
       >
-        {Math.floor(props.pitch)}
+        {Math.floor(props.frequency)}
       </button>
     </PianoKeyStyled>
   )

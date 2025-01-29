@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import recipeReducer from './reducers/recipe'
+import synthDataReducer from './reducers/synthdata'
 
 const store = configureStore({
   reducer: {
-    recipe: recipeReducer
+    recipe: recipeReducer,
+    synthdata: synthDataReducer
   }
 })
 

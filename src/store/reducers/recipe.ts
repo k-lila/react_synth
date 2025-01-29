@@ -1,19 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type WaveRecipe = {
-  pitch: number
-  intensity: number
-  scale: string
-  waves: Array<{ type: string; intensities: number[] }>
-}
-
-const initialState: WaveRecipe = {
+const initialState: SynthRecipe = {
   pitch: 440,
-  intensity: 0.7,
-  scale: 'chromatic',
+  gain: 0.7,
+  scale: 'natural',
   waves: [
     {
-      intensities: [1, 0.5, 0.25, 0.1],
+      amplitudes: [1, 0.1, 0.3, 0.1, 0, 0.1],
       type: 'sin'
     }
   ]
@@ -26,8 +19,8 @@ const WaveRecipeSlice = createSlice({
     setPitch: (state, action: PayloadAction<number>) => {
       state.pitch = action.payload
     },
-    setIntensity: (state, action: PayloadAction<number>) => {
-      state.intensity = action.payload
+    setGain: (state, action: PayloadAction<number>) => {
+      state.gain = action.payload
     },
     setScale: (state, action: PayloadAction<string>) => {
       state.scale = action.payload
@@ -35,5 +28,5 @@ const WaveRecipeSlice = createSlice({
   }
 })
 
-export const { setPitch, setIntensity, setScale } = WaveRecipeSlice.actions
+export const { setPitch, setGain, setScale } = WaveRecipeSlice.actions
 export default WaveRecipeSlice.reducer
