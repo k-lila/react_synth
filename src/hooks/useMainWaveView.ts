@@ -1,9 +1,9 @@
-import { useSelector } from "react-redux"
-import FundamentalWave from "../classes/fundamentalwave"
-import { RootReducer } from "../store"
+import { useSelector } from 'react-redux'
+import FundamentalWave from '../classes/fundamentalwave'
+import { RootReducer } from '../store'
 
 function useMainWaveView() {
-  const recipe = useSelector((state:RootReducer) => state.recipe)
+  const recipe = useSelector((state: RootReducer) => state.recipe)
   const _visualization = new FundamentalWave(1000)
   _visualization.setIntensities(recipe.waves[0].amplitudes)
   if (recipe.waves[0].type == 'sin') {

@@ -22,7 +22,7 @@ function useSynth() {
     scale = keyboard.keyboard.chromatic
   }
 
-  const {naturalKeys, unnaturalKeys, naturalFrequencies} = useMemo(() => {
+  const { naturalKeys, unnaturalKeys, naturalFrequencies } = useMemo(() => {
     const naturalKeys: number[][] = []
     const naturalFrequencies: number[] = []
     const unnaturalKeys: number[] = []
@@ -57,7 +57,7 @@ function useSynth() {
         }
       }
     }
-    return {naturalKeys, unnaturalKeys, naturalFrequencies}
+    return { naturalKeys, unnaturalKeys, naturalFrequencies }
   }, [recipe.scale, scale, audioCtx.sampleRate, recipe.waves])
   return { audioCtx, naturalKeys, unnaturalKeys, naturalFrequencies }
 }
