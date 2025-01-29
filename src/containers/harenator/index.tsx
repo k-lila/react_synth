@@ -1,12 +1,18 @@
 import SynthWave from '../../components/synthwave'
+import useSynth from '../../hooks/useSynth'
 import PianoKeyboard from '../pianokeyboard'
 import { HarenatorStyled } from './styles'
 
 const Harenator = () => {
+  const { audioCtx, naturalKeys, naturalFrequencies } = useSynth()
   return (
     <HarenatorStyled>
       <SynthWave />
-      <PianoKeyboard />
+      <PianoKeyboard
+        audioctx={audioCtx}
+        naturalkeys={naturalKeys}
+        naturalfrequencies={naturalFrequencies}
+      />
     </HarenatorStyled>
   )
 }

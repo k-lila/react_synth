@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-const useComponentSizes = (ref: React.RefObject<HTMLDivElement>) => {
+function useComponentSizes(ref: React.RefObject<HTMLDivElement>) {
   const [sizes, setSizes] = useState({
     top: 0,
     right: 0,

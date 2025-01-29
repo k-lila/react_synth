@@ -5,8 +5,15 @@ declare type InterfaceProps = {
 }
 
 declare type PianoKeyProps = {
-  pitch: number
+  frequency: number
+  wavedata: number[]
   audioctx: AudioContext
+}
+
+declare type PianoKeyboardProps = {
+  audioctx: AudioContext
+  naturalkeys: number[][]
+  naturalfrequencies: number[]
 }
 
 declare type BasicSliderProps = {

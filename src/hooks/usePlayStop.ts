@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux'
 import { RootReducer } from '../store'
 
 function usePlayStop(wave: number[], audioCtx: AudioContext) {
-  const intensity =
-    useSelector((state: RootReducer) => state.recipe.intensity) / 100
+
+  const gain = useSelector((state: RootReducer) => state.recipe.gain)
   const bufferRef = useRef<AudioBuffer | null>(null)
   const currentSourceRef = useRef<AudioBufferSourceNode | null>(null)
 
@@ -19,7 +19,6 @@ function usePlayStop(wave: number[], audioCtx: AudioContext) {
     },
     [audioCtx]
   )
-
   useEffect(() => {
     if (!bufferRef.current && audioCtx) {
       bufferRef.current = audioCtx.createBuffer(
@@ -27,16 +26,23 @@ function usePlayStop(wave: number[], audioCtx: AudioContext) {
         wave.length - 1,
         audioCtx.sampleRate
       )
+    } else if (bufferRef.current) {
+      if (bufferRef.current.length != (wave.length - 1)) {
+        bufferRef.current = audioCtx.createBuffer(
+          1,
+          wave.length - 1,
+          audioCtx.sampleRate
+        )
+      }
     }
   }, [wave.length, audioCtx])
   useEffect(() => {
     addBufferData(
       wave.map((m) => {
-        return m * intensity
+        return m * gain
       })
     )
-  }, [wave, intensity, addBufferData])
-
+  }, [wave, gain, addBufferData])
   const play = () => {
     if (audioCtx && bufferRef.current) {
       const source = audioCtx.createBufferSource()

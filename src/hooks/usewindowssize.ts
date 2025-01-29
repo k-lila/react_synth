@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const useWindowSize = () => {
+function useWindowSize() {
   const [size, setSize] = useState({
     windowsize: {
       width: window.innerWidth,
