@@ -2,6 +2,8 @@ import ScaleGenerator from './scalegenerator'
 
 type KeyboardScales = {
   chromatic: number[][]
+  chromaticnatural: number[][]
+  chromaticunnatural: number[][]
   natural: number[][]
   naturalsharps: number[][]
   naturalflats: number[][]
@@ -17,12 +19,15 @@ class Keyboard extends ScaleGenerator {
     this.keyboard = this.getKeyboard()
   }
 
-  private getKeyboard(): KeyboardScales {
+  getKeyboard(): KeyboardScales {
     const _chromatic: number[][] = []
+    const _chromaticnatural: number[][] = []
+    const _chromaticunnatural: number[][] = []
     const _natural: number[][] = []
     const _sharps: number[][] = []
     const _flats: number[][] = []
     const _pitagoric: number[][] = []
+
     let chromaticC = this.pitch / this.chromaticscale[9]
     let naturalC = this.pitch / this.naturalscale[5]
     let pitagoricC = this.pitch / this.pitagoricscale[5]
@@ -35,6 +40,9 @@ class Keyboard extends ScaleGenerator {
 
     while (chromaticC < 5000) {
       const chromaticscale = this.chromaticscale.map((num) => {
+        return num * chromaticC
+      })
+      const chromaticnatural = this.chromaticnaturalscale.map((num) => {
         return num * chromaticC
       })
       const naturalscale = this.naturalscale.map((num) => {
@@ -51,6 +59,7 @@ class Keyboard extends ScaleGenerator {
       })
 
       _chromatic.push(chromaticscale)
+      _chromaticnatural.push(chromaticnatural)
       _natural.push(naturalscale)
       _sharps.push(sharps)
       _flats.push(flats)
@@ -63,6 +72,8 @@ class Keyboard extends ScaleGenerator {
 
     return {
       chromatic: _chromatic,
+      chromaticnatural: _chromaticnatural,
+      chromaticunnatural: _chromaticunnatural,
       natural: _natural,
       naturalsharps: _sharps,
       naturalflats: _flats,

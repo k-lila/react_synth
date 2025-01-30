@@ -13,7 +13,9 @@ const PianoKey = ({ ...props }: PianoKeyProps) => {
         onTouchStart={play}
         onTouchEnd={stop}
       >
-        {Math.floor(props.frequency)}
+        <span>
+          {Math.floor((Math.ceil(props.frequency * 1000) / 1000) * 100) / 100}
+        </span>
       </button>
     </PianoKeyStyled>
   )

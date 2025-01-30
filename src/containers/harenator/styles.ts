@@ -11,6 +11,8 @@ export const HarenatorStyled = styled.div`
     justify-content: space-between;
   }
   @media screen and (min-width: 768px) and (max-width: 1023px) {
+    height: 100%;
+    justify-content: space-between;
   }
   @media screen and (min-width: 1024px) {
   }

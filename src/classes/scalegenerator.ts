@@ -1,11 +1,15 @@
 class ScaleGenerator {
-  protected chromaticscale: number[]
-  protected naturalscale: number[]
-  protected naturalsharps: number[]
-  protected naturalflats: number[]
-  protected pitagoricscale: number[]
+  chromaticscale: number[]
+  chromaticnaturalscale: number[]
+  chromaticunnaturalscale: number[]
+  naturalscale: number[]
+  naturalsharps: number[]
+  naturalflats: number[]
+  pitagoricscale: number[]
 
   constructor() {
+    this.chromaticnaturalscale = []
+    this.chromaticunnaturalscale = []
     this.chromaticscale = this.getChromaticScale()
     this.naturalscale = this.getNaturalScale()
     this.naturalsharps = this.getNaturalSharps()
@@ -13,16 +17,23 @@ class ScaleGenerator {
     this.pitagoricscale = this.getPitagoricScale()
   }
 
-  private getChromaticScale(): number[] {
+  getChromaticScale(): number[] {
     const semitom = 2 ** (1 / 12)
+    const chromatic_sequence = [0, 2, 4, 5, 7, 9, 11]
     const chromaticscale = []
     for (let i = 0; i <= 11; i++) {
-      chromaticscale.push(semitom ** i)
+      const num = semitom ** i
+      chromaticscale.push(num)
+      if (chromatic_sequence.includes(i)) {
+        this.chromaticnaturalscale.push(num)
+      } else {
+        this.chromaticunnaturalscale.push(num)
+      }
     }
     return chromaticscale
   }
 
-  private getNaturalScale(): number[] {
+  getNaturalScale(): number[] {
     const c = 1
     const g = c * 3
     const e = c * 5
@@ -45,7 +56,7 @@ class ScaleGenerator {
     return naturalscale
   }
 
-  private getNaturalSharps(): number[] {
+  getNaturalSharps(): number[] {
     const sharpNum = this.naturalscale[this.naturalscale.length - 1]
     const sharpList = []
     for (let i = 1; i <= 7; i++) {
@@ -58,7 +69,7 @@ class ScaleGenerator {
     return sharpList.sort((x, y) => x - y)
   }
 
-  private getNaturalFlats(): number[] {
+  getNaturalFlats(): number[] {
     const flatNum = this.naturalscale[3]
     const flatList = []
     for (let i = 1; i <= 7; i++) {
@@ -71,7 +82,7 @@ class ScaleGenerator {
     return flatList.sort((x, y) => x - y)
   }
 
-  private getPitagoricScale(): number[] {
+  getPitagoricScale(): number[] {
     const pitagoricscale = []
     for (let i = 0; i < 7; i++) {
       let note = 1 * 3 ** i
