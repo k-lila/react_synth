@@ -2,18 +2,19 @@ import styled from 'styled-components'
 
 export const PianoKeyboardStyled = styled.section`
   display: flex;
+  padding: 0.25em;
   width: 100%;
+  height: 100%;
   justify-content: center;
   align-items: center;
-  height: 30vmin;
   border: 2px solid black;
   border-radius: 0.25em;
-  padding: 0.25em;
+  grid-column: span 2;
 
   @media screen and (max-width: 767px) {
+    grid-column: span 1;
   }
   @media screen and (min-width: 768px) and (max-width: 1023px) {
-    height: 40vmin;
   }
   @media screen and (min-width: 1024px) {
   }

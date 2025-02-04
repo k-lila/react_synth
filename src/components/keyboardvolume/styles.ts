@@ -49,4 +49,12 @@ export const KeyboardVolumeStyled = styled.div`
     outline: 3px solid #808080;
     outline-offset: 0.125rem;
   }
+
+    }
+  @media screen and (max-width: 767px) {
+  }
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+  }
+  @media screen and (min-width: 1025px) {
+  }
 `

@@ -10,7 +10,7 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
   useKeyboardQWERTY()
 
   let keyboardSize
-  if (windowsize.width < 700) {
+  if (windowsize.width < 600) {
     keyboardSize = 5
   } else if (windowsize.width >= 1024) {
     keyboardSize = 12

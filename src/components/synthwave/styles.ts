@@ -1,18 +1,20 @@
 import styled from 'styled-components'
 
 export const SynthWaveStyled = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 75% auto;
+  gap: 0.5em;
   justify-items: center;
   align-items: center;
-  width: fit-content;
+  width: 100%;
+  height: 100%;
   border-radius: 0.25em;
   border: solid 2px black;
-  margin: 1vmin 0;
   padding: 1vmin;
   .graph {
     display: flex;
-    width: 25svh;
-    height: 25svh;
+    width: 100%;
+    height: 100%;
     border: solid 2px black;
     border-radius: 0.25em;
     &--plot {
@@ -27,9 +29,7 @@ export const SynthWaveStyled = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 25svh;
-    width: 5em;
-    margin-left: 1vmin;
+    height: 100%;
     padding: 0.25em;
     &--input {
       color: black;
@@ -51,28 +51,10 @@ export const SynthWaveStyled = styled.div`
     }
   }
   @media screen and (max-width: 767px) {
-    margin: 1.75em 0;
-    .graph {
-      width: 65vmin;
-    }
-    .menu {
-      width: 25vmin;
-    }
   }
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
-    height: 50svh;
-    width: 25vw;
-    margin-top: 1.75em;
-    margin-left: 1vmin;
-    margin-right: auto;
-    .graph {
-      height: 100%;
-      width: 100%;
-    }
-    .menu {
-      height: 100%;
-    }
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    grid-template-columns: 65% auto;
   }
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 1025px) {
   }
 `

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import useComponentSizes from '../../hooks/useComponentSizes'
 import LinePlot from '../../utils/lineplot'
 import { SynthWaveStyled } from './styles'
@@ -13,8 +13,10 @@ const SynthWave = () => {
   const { pitch, handlePitchChange } = usePitchChange()
   const graphref = useRef<HTMLDivElement>(null)
   const { height, width } = useComponentSizes(graphref)
+  useEffect(() => {
+    console.log(height, width)
+  }, [height, width])
   const mainWaveView = useMainWaveView()
-
   return (
     <SynthWaveStyled>
       <div className="graph">

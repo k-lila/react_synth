@@ -2,22 +2,28 @@ import styled from 'styled-components'
 
 export const HarenatorStyled = styled.div`
   width: 100%;
-  padding: 0.25em;
   max-width: 1200px;
-  display: flex;
-  flex-direction: column;
+  padding: 0.25em;
+  display: grid;
+  grid-template-columns: 30% auto;
+  grid-template-rows: 16em 16em;
+  gap: 0.25em;
   align-items: center;
   border: 2px solid black;
   border-radius: 0.5em;
 
   @media screen and (max-width: 767px) {
     height: 100%;
-    justify-content: space-between;
+    grid-template-columns: 1fr;
+    grid-template-rows: 30% 30% 30%;
   }
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
-    height: 100%;
-    justify-content: space-between;
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    max-width: calc(100vw - 3vmin);
+    @media screen and (max-height: 600px) {
+      grid-template-columns: 30% auto;
+      grid-template-rows: 47vh 47vh;
+    }
   }
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 1025px) {
   }
 `

@@ -18,6 +18,7 @@ function usePlayStop(wave: number[], audioCtx: AudioContext) {
     },
     [audioCtx]
   )
+
   useEffect(() => {
     if (!bufferRef.current && audioCtx) {
       bufferRef.current = audioCtx.createBuffer(
