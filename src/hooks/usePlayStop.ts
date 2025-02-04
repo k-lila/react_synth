@@ -35,6 +35,7 @@ function usePlayStop(wave: number[], audioCtx: AudioContext) {
       }
     }
   }, [wave.length, audioCtx])
+
   useEffect(() => {
     addBufferData(
       wave.map((m) => {
@@ -42,8 +43,9 @@ function usePlayStop(wave: number[], audioCtx: AudioContext) {
       })
     )
   }, [wave, gain, addBufferData])
+
   const play = () => {
-    if (audioCtx && bufferRef.current) {
+    if (audioCtx && bufferRef.current && !currentSourceRef.current) {
       const source = audioCtx.createBufferSource()
       source.loop = true
       source.buffer = bufferRef.current

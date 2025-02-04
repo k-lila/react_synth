@@ -1,11 +1,14 @@
 import KeyboardVolume from '../../components/keyboardvolume'
 import PianoKey from '../../components/pianokey'
+import useKeyboardQWERTY from '../../hooks/useKeyboardQWERTY'
 import useWindowSize from '../../hooks/usewindowssize'
 import { PianoKeyboardProps } from '../../types/propstypes'
 import { KeyboardContainer, PianoKeyboardStyled } from './styles'
 
 const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
   const { windowsize } = useWindowSize()
+  useKeyboardQWERTY()
+
   let keyboardSize
   if (windowsize.width < 700) {
     keyboardSize = 5
@@ -19,6 +22,7 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
     keyboard.push(
       <PianoKey
         key={i}
+        id={i}
         frequency={props.naturalfrequencies[i]}
         wavedata={props.naturalkeys[i]}
         audioctx={props.audioctx}

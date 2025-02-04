@@ -5,6 +5,7 @@ declare type InterfaceProps = {
 }
 
 declare type PianoKeyProps = {
+  id: number
   frequency: number
   wavedata: number[]
   audioctx: AudioContext
