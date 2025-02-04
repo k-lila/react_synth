@@ -13,9 +13,10 @@ export const HarenatorStyled = styled.div`
   border-radius: 0.5em;
 
   @media screen and (max-width: 600px) {
+    padding: 0;
     height: 100%;
-    grid-template-columns: 1fr;
-    grid-template-rows: 30% 30% 30%;
+    grid-template-columns: 100%;
+    grid-template-rows: 25% auto 30%;
   }
   @media screen and (min-width: 600px) and (max-width: 1024px) {
     max-width: calc(100vw - 3vmin);
