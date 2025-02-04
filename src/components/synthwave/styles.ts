@@ -31,6 +31,7 @@ export const SynthWaveStyled = styled.div`
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    width: 100%;
     padding: 0.25em;
     &--input {
       color: black;
@@ -51,11 +52,13 @@ export const SynthWaveStyled = styled.div`
       }
     }
   }
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 600px) {
+  }
+  @media screen and (min-width: 601px) and (max-width: 767px) {
+    grid-template-columns: 50% auto;
   }
   @media screen and (min-width: 768px) and (max-width: 1024px) {
     grid-template-columns: 65% auto;
-    }
   }
   @media screen and (min-width: 1025px) {
   }

@@ -11,10 +11,10 @@ export const PianoKeyboardStyled = styled.section`
   border-radius: 0.25em;
   grid-column: span 2;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 600px) {
     grid-column: span 1;
   }
-  @media screen and (min-width: 768px) and (max-width: 1023px) {
+  @media screen and (min-width: 601px) and (max-width: 1023px) {
   }
   @media screen and (min-width: 1024px) {
   }

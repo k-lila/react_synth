@@ -12,12 +12,12 @@ export const HarenatorStyled = styled.div`
   border: 2px solid black;
   border-radius: 0.5em;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 600px) {
     height: 100%;
     grid-template-columns: 1fr;
     grid-template-rows: 30% 30% 30%;
   }
-  @media screen and (min-width: 768px) and (max-width: 1024px) {
+  @media screen and (min-width: 600px) and (max-width: 1024px) {
     max-width: calc(100vw - 3vmin);
     @media screen and (max-height: 600px) {
       grid-template-columns: 30% auto;
