@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import recipeReducer from './reducers/recipe'
 import synthDataReducer from './reducers/synthdata'
+import keyboardKeysReducer from './reducers/keyboardkeys'
 
 const store = configureStore({
   reducer: {
     recipe: recipeReducer,
-    synthdata: synthDataReducer
+    synthdata: synthDataReducer,
+    keyboardkeys: keyboardKeysReducer
   }
 })
 
