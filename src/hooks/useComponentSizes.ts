@@ -13,7 +13,6 @@ function useComponentSizes(ref: React.RefObject<HTMLDivElement>) {
     if (ref.current) {
       const { top, right, bottom, left, height, width } =
         ref.current.getBoundingClientRect()
-      console.log(ref.current.getBoundingClientRect())
       setSizes({
         top: top,
         right: right,
