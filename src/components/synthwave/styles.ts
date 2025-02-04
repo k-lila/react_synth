@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const SynthWaveStyled = styled.div`
   display: grid;
   grid-template-columns: 75% auto;
+  grid-template-rows: 100%;
   gap: 0.5em;
   justify-items: center;
   align-items: center;
@@ -19,8 +20,8 @@ export const SynthWaveStyled = styled.div`
     border-radius: 0.25em;
     &--plot {
       display: flex;
-      width: 100%;
       height: 100%;
+      width: 100%;
     }
   }
   .menu {
@@ -54,6 +55,7 @@ export const SynthWaveStyled = styled.div`
   }
   @media screen and (min-width: 768px) and (max-width: 1024px) {
     grid-template-columns: 65% auto;
+    }
   }
   @media screen and (min-width: 1025px) {
   }

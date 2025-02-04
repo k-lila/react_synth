@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import useComponentSizes from '../../hooks/useComponentSizes'
 import LinePlot from '../../utils/lineplot'
 import { SynthWaveStyled } from './styles'
@@ -12,16 +12,24 @@ const SynthWave = () => {
   const dispatch = useDispatch()
   const { pitch, handlePitchChange } = usePitchChange()
   const graphref = useRef<HTMLDivElement>(null)
-  const { height, width } = useComponentSizes(graphref)
-  useEffect(() => {
-    console.log(height, width)
-  }, [height, width])
+  const componentSizes = useComponentSizes(graphref)
+
   const mainWaveView = useMainWaveView()
+  const plot = LinePlot(
+    [mainWaveView],
+    componentSizes.width,
+    componentSizes.height,
+    5,
+    1,
+    5,
+    1
+  )
+
   return (
     <SynthWaveStyled>
       <div className="graph">
         <div className="graph--plot" ref={graphref}>
-          {LinePlot([mainWaveView], width, height, 5, 1, 5, 1)}
+          {plot}
         </div>
       </div>
       <div className="menu">
@@ -49,7 +57,6 @@ const SynthWave = () => {
             </button>
           </div>
         </div>
-        <button>refresh</button>
       </div>
     </SynthWaveStyled>
   )
