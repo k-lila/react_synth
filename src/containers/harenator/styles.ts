@@ -21,7 +21,7 @@ export const HarenatorStyled = styled.div`
     max-width: calc(100vw - 3vmin);
     @media screen and (max-height: 600px) {
       grid-template-columns: 30% auto;
-      grid-template-rows: 47vh 47vh;
+      grid-template-rows: 47svh 47svh;
     }
   }
   @media screen and (min-width: 1025px) {
