@@ -8,6 +8,10 @@ const initialState: SynthRecipe = {
     {
       amplitudes: [1, 0.1, 0.3, 0.1, 0, 0.1],
       type: 'sin'
+    },
+    {
+      amplitudes: [1, 0.1, 0.3, 0.1, 0, 0.1],
+      type: 'square'
     }
   ]
 }

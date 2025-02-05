@@ -1,7 +1,18 @@
+import { useSelector } from 'react-redux'
 import { WaveEditorStyled } from './styles'
+import { RootReducer } from '../../store'
+import FundamentalWave from '../../components/fundamentalwave'
 
 const WaveEditor = () => {
-  return <WaveEditorStyled>asd</WaveEditorStyled>
+  const recipe = useSelector((state: RootReducer) => state.recipe)
+  return (
+    <WaveEditorStyled>
+      {recipe.waves.map((m, i) => {
+        console.log(m)
+        return <FundamentalWave key={i} />
+      })}
+    </WaveEditorStyled>
+  )
 }
 
 export default WaveEditor

@@ -10,6 +10,7 @@ export const PianoKeyboardStyled = styled.section`
   border: 2px solid black;
   border-radius: 0.25em;
   grid-column: span 2;
+  background-color: white;
 
   @media screen and (max-width: 600px) {
     grid-column: span 1;

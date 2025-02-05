@@ -12,6 +12,8 @@ export const SynthWaveStyled = styled.div`
   border-radius: 0.25em;
   border: solid 2px black;
   padding: 1vmin;
+  background-color: white;
+
   .graph {
     display: flex;
     width: 100%;

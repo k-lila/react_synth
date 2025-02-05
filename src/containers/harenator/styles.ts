@@ -11,6 +11,7 @@ export const HarenatorStyled = styled.div`
   align-items: center;
   border: 2px solid black;
   border-radius: 0.5em;
+  background-color: black;
 
   @media screen and (max-width: 600px) {
     padding: 0;

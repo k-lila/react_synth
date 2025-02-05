@@ -17,7 +17,7 @@ function useSynth() {
     const naturalKeys: number[][] = []
     const unnaturalKeys: number[] = []
     const naturalFrequencies: number[] = []
-    for (let i = 4; i < 6; i++) {
+    for (let i = 2; i < 5; i++) {
       for (let j = 0; j < keyboard[i].length; j++) {
         const fundamental = new FundamentalWave(audioCtx.sampleRate)
         fundamental.setIntensities(recipe.waves[0].amplitudes)
