@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux'
 import usePlayStop from '../../hooks/usePlayStop'
-import { PianoKeyProps } from '../../types/propstypes'
 import { PianoKeyStyled } from './styles'
 import { RootReducer } from '../../store'
 import { useEffect } from 'react'

@@ -45,7 +45,7 @@ const FundamentalWave = ({ id }: { id: number }) => {
       <div className="harmonics">
         <button style={{ borderRight: '2px solid black' }}>-</button>
         <div className="harmonics__button-container">
-          {wave.amplitudes.map((m, i) => {
+          {wave.amplitudes.map((_, i) => {
             return (
               <button onClick={() => setSelected(i)} key={i}>
                 {i}
