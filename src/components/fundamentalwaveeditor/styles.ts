@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
-export const FundamentalWaveStyled = styled.div`
+export const FundamentalWaveEditorStyled = styled.div`
   display: grid;
   grid-template-columns: auto 1.75em;
   grid-template-rows: 1.75em calc(100% - 4em) 2.25em;
   height: 100%;
-  width: 35%;
+  min-width: 40%;
   border: 2px solid black;
   border-radius: 0.25em;
   margin-right: 1vmin;
@@ -136,6 +136,9 @@ export const FundamentalWaveStyled = styled.div`
       &::-webkit-scrollbar-thumb {
         background-color: darkgray;
       }
+    }
+    .--bg-darkgray {
+      background-color: darkgray;
     }
   }
 `

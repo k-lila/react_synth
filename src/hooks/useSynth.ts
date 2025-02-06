@@ -19,27 +19,12 @@ function useSynth() {
     const naturalFrequencies: number[] = []
     const fundamental = new FundamentalWave(audioCtx.sampleRate)
 
-    for (let i = 2; i < 5; i++) {
+    for (let i = 3; i < 5; i++) {
       for (let j = 0; j < keyboard[i].length; j++) {
         const _list: number[][] = []
         recipe.waves.forEach((wave) => {
           fundamental.setIntensities(wave.amplitudes)
-          switch (wave.type) {
-            case 'sin':
-              fundamental.createSinContext(keyboard[i][j])
-              break
-            case 'square':
-              fundamental.createSquareContext(keyboard[i][j])
-              break
-            case 'saw':
-              fundamental.createSawThoothContext(keyboard[i][j])
-              break
-            case 'tri':
-              fundamental.createTriangleContext(keyboard[i][j])
-              break
-            default:
-              fundamental.createSinContext(keyboard[i][j])
-          }
+          fundamental.createContext(keyboard[i][j], wave.type)
           _list.push(fundamental.getWave())
         })
         const result: number[] = []

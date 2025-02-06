@@ -10,22 +10,7 @@ function useMainWaveView() {
     const _list: number[][] = []
     recipe.waves.forEach((wave) => {
       _visualization.setIntensities(wave.amplitudes)
-      switch (wave.type) {
-        case 'sin':
-          _visualization.createSinContext(1)
-          break
-        case 'square':
-          _visualization.createSquareContext(1)
-          break
-        case 'saw':
-          _visualization.createSawThoothContext(1)
-          break
-        case 'tri':
-          _visualization.createTriangleContext(1)
-          break
-        default:
-          _visualization.createSinContext(1)
-      }
+      _visualization.createContext(1, wave.type)
       _list.push(_visualization.getWave())
     })
     const result: number[] = []

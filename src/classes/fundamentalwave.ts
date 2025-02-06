@@ -98,6 +98,25 @@ class FundamentalWave {
     this.wavelist = waveList
   }
 
+  createContext(pitch: number, typewave: string) {
+    switch (typewave) {
+      case 'sin':
+        this.createSinContext(pitch)
+        break
+      case 'square':
+        this.createSquareContext(pitch)
+        break
+      case 'saw':
+        this.createSawThoothContext(pitch)
+        break
+      case 'tri':
+        this.createTriangleContext(pitch)
+        break
+      default:
+        this.createSinContext(pitch)
+    }
+  }
+
   getWave(): number[] {
     let wave: number[] = []
     if (this.wavelist.length > 0) {
