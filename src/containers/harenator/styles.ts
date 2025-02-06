@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const HarenatorStyled = styled.div`
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   padding: 0.25em;
   display: grid;
   grid-template-columns: 30% auto;

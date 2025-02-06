@@ -14,14 +14,18 @@ function useSynth() {
   const audioCtx = audioCtxRef.current
 
   const { naturalKeys, unnaturalKeys, naturalFrequencies } = useMemo(() => {
+
     const naturalKeys: number[][] = []
     const unnaturalKeys: number[] = []
     const naturalFrequencies: number[] = []
+    const fundamental = new FundamentalWave(audioCtx.sampleRate)
+
     for (let i = 2; i < 5; i++) {
       for (let j = 0; j < keyboard[i].length; j++) {
-        const fundamental = new FundamentalWave(audioCtx.sampleRate)
-        fundamental.setIntensities(recipe.waves[0].amplitudes)
-        switch (recipe.waves[0].type) {
+        const _list: number[][] = []
+        recipe.waves.forEach((wave) => {
+          fundamental.setIntensities(wave.amplitudes)
+          switch (wave.type) {
           case 'sin':
             fundamental.createSinContext(keyboard[i][j])
             break
@@ -36,9 +40,20 @@ function useSynth() {
             break
           default:
             fundamental.createSinContext(keyboard[i][j])
+          }
+          _list.push(fundamental.getWave())
+        })
+        const result: number[] = []
+        for (let k=0; k<_list[0].length; k++) {
+          let _num = 0
+          for (let l=0; l<_list.length; l++) {
+            _num += _list[l][k]
+          }
+          result.push(_num)
         }
+        const diff = (Math.max(...result) - Math.min(...result)) / 2
+        naturalKeys.push(result.map((m) => m / diff))
         naturalFrequencies.push(keyboard[i][j])
-        naturalKeys.push(fundamental.getWave())
       }
     }
     return { naturalKeys, unnaturalKeys, naturalFrequencies }

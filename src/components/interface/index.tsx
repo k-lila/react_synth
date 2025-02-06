@@ -1,7 +1,7 @@
 import { InterfaceStyled, Title } from './styles'
-import { InterfaceProps } from '../../types/propstypes'
+import { ReactNode } from 'react'
 
-const Interface = ({ children }: InterfaceProps) => {
+const Interface = ({ children }: { children: ReactNode }) => {
   return (
     <InterfaceStyled>
       <Title>harenator</Title>

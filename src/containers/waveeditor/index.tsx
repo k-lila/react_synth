@@ -7,9 +7,8 @@ const WaveEditor = () => {
   const recipe = useSelector((state: RootReducer) => state.recipe)
   return (
     <WaveEditorStyled>
-      {recipe.waves.map((m, i) => {
-        console.log(m)
-        return <FundamentalWave key={i} />
+      {recipe.waves.map((_, i) => {
+        return <FundamentalWave key={i} id={i} />
       })}
     </WaveEditorStyled>
   )

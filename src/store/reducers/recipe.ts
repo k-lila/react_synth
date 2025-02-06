@@ -6,12 +6,12 @@ const initialState: SynthRecipe = {
   scale: 'natural',
   waves: [
     {
-      amplitudes: [1, 0.1, 0.3, 0.1, 0, 0.1],
+      amplitudes: [1, 0.4, 0.2, 0.3, 0.1, 0.1],
       type: 'sin'
     },
     {
-      amplitudes: [1, 0.1, 0.3, 0.1, 0, 0.1],
-      type: 'square'
+      amplitudes: [0.2, 0.05, 0.05],
+      type: 'sin'
     }
   ]
 }
@@ -28,9 +28,12 @@ const WaveRecipeSlice = createSlice({
     },
     setScale: (state, action: PayloadAction<string>) => {
       state.scale = action.payload
+    },
+    adjustGain: (state, action: PayloadAction<{index: number, j: number, gain: number}>) => {
+      state.waves[action.payload.index].amplitudes[action.payload.j] = action.payload.gain
     }
   }
 })
 
-export const { setPitch, setGain, setScale } = WaveRecipeSlice.actions
+export const { setPitch, setGain, setScale, adjustGain } = WaveRecipeSlice.actions
 export default WaveRecipeSlice.reducer

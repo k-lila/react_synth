@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { BasicSliderStyled } from './styles'
-import { BasicSliderProps } from '../../types/propstypes'
 
 const BasicSlider = ({ ...props }: BasicSliderProps) => {
   const [gain, setGain] = useState(props.defaultgain)
