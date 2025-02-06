@@ -14,7 +14,6 @@ function useSynth() {
   const audioCtx = audioCtxRef.current
 
   const { naturalKeys, unnaturalKeys, naturalFrequencies } = useMemo(() => {
-
     const naturalKeys: number[][] = []
     const unnaturalKeys: number[] = []
     const naturalFrequencies: number[] = []
@@ -26,27 +25,27 @@ function useSynth() {
         recipe.waves.forEach((wave) => {
           fundamental.setIntensities(wave.amplitudes)
           switch (wave.type) {
-          case 'sin':
-            fundamental.createSinContext(keyboard[i][j])
-            break
-          case 'square':
-            fundamental.createSquareContext(keyboard[i][j])
-            break
-          case 'saw':
-            fundamental.createSawThoothContext(keyboard[i][j])
-            break
-          case 'tri':
-            fundamental.createTriangleContext(keyboard[i][j])
-            break
-          default:
-            fundamental.createSinContext(keyboard[i][j])
+            case 'sin':
+              fundamental.createSinContext(keyboard[i][j])
+              break
+            case 'square':
+              fundamental.createSquareContext(keyboard[i][j])
+              break
+            case 'saw':
+              fundamental.createSawThoothContext(keyboard[i][j])
+              break
+            case 'tri':
+              fundamental.createTriangleContext(keyboard[i][j])
+              break
+            default:
+              fundamental.createSinContext(keyboard[i][j])
           }
           _list.push(fundamental.getWave())
         })
         const result: number[] = []
-        for (let k=0; k<_list[0].length; k++) {
+        for (let k = 0; k < _list[0].length; k++) {
           let _num = 0
-          for (let l=0; l<_list.length; l++) {
+          for (let l = 0; l < _list.length; l++) {
             _num += _list[l][k]
           }
           result.push(_num)

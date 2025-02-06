@@ -29,11 +29,16 @@ const WaveRecipeSlice = createSlice({
     setScale: (state, action: PayloadAction<string>) => {
       state.scale = action.payload
     },
-    adjustGain: (state, action: PayloadAction<{index: number, j: number, gain: number}>) => {
-      state.waves[action.payload.index].amplitudes[action.payload.j] = action.payload.gain
+    adjustGain: (
+      state,
+      action: PayloadAction<{ index: number; j: number; gain: number }>
+    ) => {
+      state.waves[action.payload.index].amplitudes[action.payload.j] =
+        action.payload.gain
     }
   }
 })
 
-export const { setPitch, setGain, setScale, adjustGain } = WaveRecipeSlice.actions
+export const { setPitch, setGain, setScale, adjustGain } =
+  WaveRecipeSlice.actions
 export default WaveRecipeSlice.reducer

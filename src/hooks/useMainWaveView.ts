@@ -11,27 +11,27 @@ function useMainWaveView() {
     recipe.waves.forEach((wave) => {
       _visualization.setIntensities(wave.amplitudes)
       switch (wave.type) {
-      case 'sin':
-        _visualization.createSinContext(1)
-        break
-      case 'square':
-        _visualization.createSquareContext(1)
-        break
-      case 'saw':
-        _visualization.createSawThoothContext(1)
-        break
-      case 'tri':
-        _visualization.createTriangleContext(1)
-        break
-      default:
-        _visualization.createSinContext(1)
+        case 'sin':
+          _visualization.createSinContext(1)
+          break
+        case 'square':
+          _visualization.createSquareContext(1)
+          break
+        case 'saw':
+          _visualization.createSawThoothContext(1)
+          break
+        case 'tri':
+          _visualization.createTriangleContext(1)
+          break
+        default:
+          _visualization.createSinContext(1)
       }
       _list.push(_visualization.getWave())
     })
     const result: number[] = []
-    for (let k=0; k<_list[0].length; k++) {
+    for (let k = 0; k < _list[0].length; k++) {
       let _num = 0
-      for (let l=0; l<_list.length; l++) {
+      for (let l = 0; l < _list.length; l++) {
         _num += _list[l][k]
       }
       result.push(_num)
