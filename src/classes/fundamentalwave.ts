@@ -99,7 +99,7 @@ class FundamentalWave {
   }
 
   getWave(): number[] {
-    const wave: number[] = []
+    let wave: number[] = []
     if (this.wavelist.length > 0) {
       const harmonic_wave = new Array(this.wavelist[0].length).fill(0)
       for (let i = 0; i < this.wavelist.length; i++) {
@@ -107,8 +107,7 @@ class FundamentalWave {
           harmonic_wave[j] += this.wavelist[i][j]
         }
       }
-      const diff = (Math.max(...harmonic_wave) - Math.min(...harmonic_wave)) / 2
-      harmonic_wave.map((m) => wave.push(m / diff))
+      wave = harmonic_wave
     }
     return wave
   }
