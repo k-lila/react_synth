@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const InterfaceStyled = styled.main`
+export const SynthWindowStyled = styled.main`
   position: relative;
   width: 98%;
   height: 98%;

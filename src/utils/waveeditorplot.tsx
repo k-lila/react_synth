@@ -1,14 +1,13 @@
 import * as d3 from 'd3'
 
-export default function LinePlot(
+function waveEditorPlot(
   data: number[][],
   width: number,
   height: number,
   marginTop: number,
   marginRight: number,
   marginBottom: number,
-  marginLeft: number,
-  id?: number
+  marginLeft: number
 ) {
   const x = d3.scaleLinear(
     [0, data[0].length - 1],
@@ -27,15 +26,15 @@ export default function LinePlot(
         y1={height / 2}
         y2={height / 2}
         stroke="black"
-        strokeWidth="2"
+        strokeWidth="1"
       />
       {data.map((m, i) => {
         return (
           <path
             key={i}
             fill="none"
-            stroke={data.length > 1 ? (id == i ? 'black' : 'gray') : 'black'}
-            strokeWidth={data.length > 1 ? (id == i ? '3' : '1') : '2'}
+            stroke="black"
+            strokeWidth="1"
             d={line(m) || undefined}
           />
         )
@@ -43,3 +42,5 @@ export default function LinePlot(
     </svg>
   )
 }
+
+export default waveEditorPlot

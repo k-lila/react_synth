@@ -6,12 +6,20 @@ const initialState: SynthRecipe = {
   scale: 'natural',
   waves: [
     {
-      amplitudes: [1, 0.4, 0.2, 0.3, 0.1, 0.1],
+      amplitudes: [1, 0.1, 0.4, 0.3, 0.1, 0.1],
       type: 'sin'
     },
     {
-      amplitudes: [0.2, 0.05, 0.05],
-      type: 'sin'
+      amplitudes: [1, 0.1, 0.2],
+      type: 'tri'
+    },
+    {
+      amplitudes: [0.1, 0.05, 0.1],
+      type: 'square'
+    },
+    {
+      amplitudes: [0.1, 0.05, 0.1],
+      type: 'saw'
     }
   ]
 }

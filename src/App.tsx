@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux'
-import Interface from './components/interface'
+import SynthWindow from './components/synthwindow'
 import Harenator from './containers/harenator'
 import { Container, GlobalStyle } from './styles'
 import store from './store'
@@ -9,11 +9,11 @@ function App() {
     <>
       <GlobalStyle />
       <Container>
-        <Interface>
+        <SynthWindow>
           <Provider store={store}>
             <Harenator />
           </Provider>
-        </Interface>
+        </SynthWindow>
       </Container>
     </>
   )
