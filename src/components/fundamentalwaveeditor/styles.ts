@@ -10,6 +10,7 @@ export const FundamentalWaveEditorStyled = styled.div`
   border-radius: 0.25em;
   margin-right: 1vmin;
   color: black;
+  background-color: white;
 
   .header {
     display: grid;
@@ -32,11 +33,23 @@ export const FundamentalWaveEditorStyled = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
       button {
         width: fit-content;
         padding: 0 1em;
         border-right: 2px solid black;
         border-left: 2px solid black;
+      }
+      &__popup {
+        position: absolute;
+        top: 100%;
+        border: 2px solid black;
+        padding: 0.25em;
+        display: grid;
+        grid-template-columns: 1.5em 1fr;
+        grid-template-rows: 2em 2em 2em 2em;
+        background-color: white;
+        align-items: center;
       }
     }
   }
@@ -137,8 +150,8 @@ export const FundamentalWaveEditorStyled = styled.div`
         background-color: darkgray;
       }
     }
-    .--bg-darkgray {
-      background-color: darkgray;
-    }
+  }
+  .--d-none {
+    display: none;
   }
 `
