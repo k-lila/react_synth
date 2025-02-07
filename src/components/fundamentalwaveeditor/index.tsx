@@ -8,6 +8,7 @@ import {
   adjustGain,
   removeFundamental,
   removeHarmonic,
+  setWaveGain,
   setWaveType
 } from '../../store/reducers/recipe'
 import FundamentalWave from '../../classes/fundamentalwave'
@@ -24,28 +25,33 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
   const handleGain = (_gain: number) => {
     setGain(_gain)
   }
+
   useEffect(() => {
     if (selected >= 0) {
       setGain(wave.amplitudes[selected])
+    } else {
+      setGain(wave.gain)
     }
-  }, [selected, wave.amplitudes])
+  }, [selected, wave.amplitudes, wave.gain])
 
   useEffect(() => {
-    dispatch(adjustGain({ index: id, j: selected, gain: gain }))
+    if (selected >= 0) {
+      dispatch(adjustGain({ index: id, j: selected, gain: gain }))
+    } else {
+      dispatch(setWaveGain({ waveid: id, gain: gain }))
+    }
   }, [dispatch, id, gain])
-
   const teste = new FundamentalWave(1000)
   teste.setIntensities(wave.amplitudes)
   teste.createContext(1, wave.type)
-  const _wave = teste.getWave()
+  const _wave = teste.getWave().map((m) => m * wave.gain)
   const diff = (Math.max(..._wave) - Math.min(..._wave)) / 2
   const visualization = _wave.map((m) => (diff > 1 ? m / diff : m))
-
   const graphref = useRef<HTMLDivElement>(null)
   const componentSizes = useComponentSizes(graphref)
-
+  const teste2 = [...teste.wavelist, visualization]
   const plot = LinePlot(
-    waveExplosion ? teste.wavelist : [visualization],
+    waveExplosion ? teste2 : [visualization],
     componentSizes.width,
     componentSizes.height,
     5,
@@ -68,7 +74,7 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
           <button onClick={() => setPopUp(!popUp)}>{wave.type}</button>
           <div className={`header__typewave__popup ${popUp ? '' : '--d-none'}`}>
             <input
-              onClick={() => dispatch(setWaveType({ id: id, type: 'sin' }))}
+              onChange={() => dispatch(setWaveType({ id: id, type: 'sin' }))}
               type="radio"
               id={`sin${id}`}
               name={`wavef${id}`}
@@ -77,7 +83,7 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
             />
             <label htmlFor={`sin${id}`}>Seno</label>
             <input
-              onClick={() => dispatch(setWaveType({ id: id, type: 'square' }))}
+              onChange={() => dispatch(setWaveType({ id: id, type: 'square' }))}
               type="radio"
               id={`square${id}`}
               name={`wavef${id}`}
@@ -86,7 +92,7 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
             />
             <label htmlFor={`square${id}`}>Quadrada</label>
             <input
-              onClick={() => dispatch(setWaveType({ id: id, type: 'tri' }))}
+              onChange={() => dispatch(setWaveType({ id: id, type: 'tri' }))}
               type="radio"
               id={`tri${id}`}
               name={`wavef${id}`}
@@ -95,7 +101,7 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
             />
             <label htmlFor={`tri${id}`}>Triangular</label>
             <input
-              onClick={() => dispatch(setWaveType({ id: id, type: 'saw' }))}
+              onChange={() => dispatch(setWaveType({ id: id, type: 'saw' }))}
               type="radio"
               id={`saw${id}`}
               name={`wavef${id}`}
@@ -112,24 +118,44 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
           X
         </button>
       </div>
+      <div className="slider">
+        {/* <BasicSlider
+          key={selected}
+          defaultgain={wave.amplitudes[selected]}
+          onGainChange={handleGain}
+        /> */}
+      </div>
       <div className="graph" ref={graphref}>
         {plot}
       </div>
       <div className="slider">
         <BasicSlider
           key={selected}
-          defaultgain={wave.amplitudes[selected]}
+          defaultgain={selected >= 0 ? wave.amplitudes[selected] : wave.gain}
           onGainChange={handleGain}
         />
       </div>
       <div className="harmonics">
         <button
           style={{ borderRight: '2px solid black' }}
-          onClick={() => dispatch(removeHarmonic(id))}
+          onClick={() => {
+            if (selected == wave.amplitudes.length - 1) {
+              setSelected(selected == 0 ? selected : selected - 1)
+            }
+            dispatch(removeHarmonic(id))
+          }}
         >
           -
         </button>
         <div className="harmonics__button-container">
+          <button
+            className={selected < 0 ? '--bg-darkgray' : ''}
+            onClick={() => {
+              setSelected(-1)
+            }}
+          >
+            ~
+          </button>
           {wave.amplitudes.map((_, i) => {
             return (
               <button

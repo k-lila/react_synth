@@ -11,7 +11,7 @@ function useMainWaveView() {
     recipe.waves.forEach((wave) => {
       _visualization.setIntensities(wave.amplitudes)
       _visualization.createContext(1, wave.type)
-      _list.push(_visualization.getWave())
+      _list.push(_visualization.getWave().map((m) => m * wave.gain))
     })
     const result: number[] = []
     for (let k = 0; k < _list[0].length; k++) {

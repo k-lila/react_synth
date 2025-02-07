@@ -3,23 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 const initialState: SynthRecipe = {
   pitch: 440,
   gain: 0.7,
-  scale: 'natural',
+  scale: 'chromaticasd',
   waves: [
     {
-      amplitudes: [1, 0.1, 0.4, 0.3, 0.1, 0.1],
-      type: 'sin'
-    },
-    {
-      amplitudes: [1, 0.1, 0.2],
-      type: 'tri'
-    },
-    {
-      amplitudes: [0.1, 0.05, 0.1],
-      type: 'square'
-    },
-    {
-      amplitudes: [0.1, 0.05, 0.1],
-      type: 'saw'
+      type: 'sin',
+      gain: 1,
+      amplitudes: [1]
     }
   ]
 }
@@ -33,6 +22,12 @@ const WaveRecipeSlice = createSlice({
     },
     setGain: (state, action: PayloadAction<number>) => {
       state.gain = action.payload
+    },
+    setWaveGain: (
+      state,
+      action: PayloadAction<{ waveid: number; gain: number }>
+    ) => {
+      state.waves[action.payload.waveid].gain = action.payload.gain
     },
     setScale: (state, action: PayloadAction<string>) => {
       state.scale = action.payload
@@ -57,10 +52,12 @@ const WaveRecipeSlice = createSlice({
       }
     },
     addFundamental: (state) => {
-      state.waves.push({ type: 'sin', amplitudes: [1] })
+      state.waves.push({ type: 'sin', gain: 1, amplitudes: [1] })
     },
     removeFundamental: (state, action: PayloadAction<number>) => {
-      state.waves = state.waves.filter((_, i) => i != action.payload)
+      if (state.waves.length > 1) {
+        state.waves = state.waves.filter((_, i) => i != action.payload)
+      }
     },
     setWaveType: (
       state,
@@ -80,6 +77,7 @@ export const {
   removeHarmonic,
   addFundamental,
   removeFundamental,
-  setWaveType
+  setWaveType,
+  setWaveGain
 } = WaveRecipeSlice.actions
 export default WaveRecipeSlice.reducer

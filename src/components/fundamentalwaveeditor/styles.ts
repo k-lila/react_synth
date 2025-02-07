@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const FundamentalWaveEditorStyled = styled.div`
   display: grid;
-  grid-template-columns: auto 1.75em;
+  grid-template-columns: 1.75em auto 1.75em;
   grid-template-rows: 1.75em calc(100% - 4em) 2.25em;
   height: 100%;
   min-width: 40%;
@@ -18,7 +18,7 @@ export const FundamentalWaveEditorStyled = styled.div`
     align-items: center;
     height: 100%;
     border-bottom: 2px solid black;
-    grid-column: span 2;
+    grid-column: span 3;
     button {
       display: flex;
       align-items: center;
@@ -121,7 +121,7 @@ export const FundamentalWaveEditorStyled = styled.div`
     display: grid;
     grid-template-rows: 100%;
     grid-template-columns: 1.75em auto 1.75em;
-    grid-column: span 2;
+    grid-column: span 3;
     align-items: center;
     height: 100%;
     width: 100%;

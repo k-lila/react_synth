@@ -30,12 +30,36 @@ export default function LinePlot(
         strokeWidth="2"
       />
       {data.map((m, i) => {
+        let stroke
+        let strokeWidth
+        if (data.length > 1) {
+          if (id == -1) {
+            if (i == data.length - 1) {
+              stroke = 'black'
+              strokeWidth = 3
+            } else {
+              stroke = 'gray'
+              strokeWidth = 1
+            }
+          } else {
+            if (id == i) {
+              stroke = 'black'
+              strokeWidth = 3
+            } else {
+              stroke = 'gray'
+              strokeWidth = 1
+            }
+          }
+        } else {
+          stroke = 'black'
+          strokeWidth = 2
+        }
         return (
           <path
             key={i}
             fill="none"
-            stroke={data.length > 1 ? (id == i ? 'black' : 'gray') : 'black'}
-            strokeWidth={data.length > 1 ? (id == i ? '3' : '1') : '2'}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
             d={line(m) || undefined}
           />
         )

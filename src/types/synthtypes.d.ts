@@ -1,5 +1,6 @@
 declare type WaveRecipe = {
   type: string
+  gain: number
   amplitudes: number[]
 }
 

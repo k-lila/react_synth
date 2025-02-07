@@ -18,15 +18,15 @@ function useSynth() {
     const unnaturalKeys: number[] = []
     const naturalFrequencies: number[] = []
     const fundamental = new FundamentalWave(audioCtx.sampleRate)
-
     for (let i = 3; i < 5; i++) {
       for (let j = 0; j < keyboard[i].length; j++) {
         const _list: number[][] = []
-        recipe.waves.forEach((wave) => {
-          fundamental.setIntensities(wave.amplitudes)
-          fundamental.createContext(keyboard[i][j], wave.type)
-          _list.push(fundamental.getWave())
-        })
+        for (let k = 0; k < recipe.waves.length; k++) {
+          fundamental.setIntensities(recipe.waves[k].amplitudes)
+          fundamental.createContext(keyboard[i][j], recipe.waves[k].type)
+          const wave = fundamental.getWave()
+          _list.push(wave.map((m) => m * recipe.waves[k].gain))
+        }
         const result: number[] = []
         for (let k = 0; k < _list[0].length; k++) {
           let _num = 0
