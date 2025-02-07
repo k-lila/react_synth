@@ -37,7 +37,23 @@ const KeyboardQWERTYSlice = createSlice({
         if (m.keycode == action.payload.keycode) {
           return {
             id: m.id,
-            keycode: action.payload.keycode,
+            keycode: m.keycode,
+            pressed: action.payload.pressed
+          }
+        } else {
+          return m
+        }
+      })
+    },
+    setKeyById: (
+      state,
+      action: PayloadAction<{ keyid: number; pressed: boolean }>
+    ) => {
+      state.naturalkeys = state.naturalkeys.map((m) => {
+        if (m.id == action.payload.keyid) {
+          return {
+            id: m.id,
+            keycode: m.keycode,
             pressed: action.payload.pressed
           }
         } else {
@@ -48,5 +64,5 @@ const KeyboardQWERTYSlice = createSlice({
   }
 })
 
-export const { setKeyByCode } = KeyboardQWERTYSlice.actions
+export const { setKeyByCode, setKeyById } = KeyboardQWERTYSlice.actions
 export default KeyboardQWERTYSlice.reducer

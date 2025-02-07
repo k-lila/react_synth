@@ -7,6 +7,30 @@ export const WaveEditorStyled = styled.div`
   border-radius: 0.25em;
   width: 100%;
   height: 100%;
-  background-color: white;
   overflow-x: auto;
+  background-color: black;
+
+  .add-btn {
+    height: 100%;
+    padding: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      width: 7em;
+      height: 7em;
+      border-radius: 50%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        background-color: darkgray;
+      }
+    }
+    span {
+      font-size: 7em;
+    }
+  }
 `
