@@ -10,8 +10,9 @@ function useMainWaveView() {
     const _list: number[][] = []
     recipe.waves.forEach((wave) => {
       _visualization.setIntensities(wave.amplitudes)
+      _visualization.setPhases(wave.phases)
       _visualization.createContext(1, wave.type)
-      _list.push(_visualization.getWave().map((m) => m * wave.gain))
+      _list.push(_visualization.getWave(wave.gain, wave.phase))
     })
     const result: number[] = []
     for (let k = 0; k < _list[0].length; k++) {
@@ -22,7 +23,14 @@ function useMainWaveView() {
       result.push(_num)
     }
     const diff = (Math.max(...result) - Math.min(...result)) / 2
-    return result.map((m) => (m / diff) * recipe.gain)
+    const final = result.map((m) => {
+      if (diff == 0) {
+        return 0
+      } else {
+        return (m / diff) * recipe.gain
+      }
+    })
+    return final
   }, [recipe.waves, recipe.gain])
   return visualization
 }

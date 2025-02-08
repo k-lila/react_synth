@@ -16,8 +16,8 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
         value={gain}
         onChange={(e) => setGain(Number(e.target.value))}
         step={0.01}
-        min={-1}
-        max={1}
+        min={props.min}
+        max={props.max}
         className={props.horizontal ? '' : 'vertical'}
       />
     </BasicSliderStyled>

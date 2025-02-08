@@ -3,10 +3,12 @@ import minBufferSize from '../utils/minbuffersize'
 class FundamentalWave {
   samplerate: number
   intensities: number[]
+  phases: number[]
   wavelist: number[][]
   constructor(samplerate: number) {
     this.samplerate = samplerate
     this.intensities = [1]
+    this.phases = [1]
     this.wavelist = []
   }
 
@@ -14,20 +16,36 @@ class FundamentalWave {
     return (this.intensities = intensities)
   }
 
-  createSin(pitch: number, intensity: number, multiplier: number): number[] {
+  setPhases(phases: number[]) {
+    return (this.phases = phases)
+  }
+
+  createSin(
+    pitch: number,
+    intensity: number,
+    phase: number,
+    multiplier: number
+  ): number[] {
     const { buffersize, num } = minBufferSize(this.samplerate, pitch)
     const num_list: number[] = []
     for (let i = 0; i <= buffersize; i++) {
       const sinPosition =
-        Math.sin(((2 * Math.PI * i) / buffersize) * (num * multiplier)) *
-        intensity
+        Math.sin(
+          ((2 * Math.PI * i) / buffersize) * (num * multiplier) +
+            phase * 2 * Math.PI
+        ) * intensity
       num_list.push(sinPosition)
     }
     return num_list
   }
 
-  createSquare(pitch: number, intensity: number, multiplier: number): number[] {
-    const sin = this.createSin(pitch, 1, multiplier)
+  createSquare(
+    pitch: number,
+    intensity: number,
+    phase: number,
+    multiplier: number
+  ): number[] {
+    const sin = this.createSin(pitch, 1, phase, multiplier)
     const num_list = sin.map((m) => {
       const square = m >= 0 ? 1 : -1
       return square * intensity
@@ -38,24 +56,27 @@ class FundamentalWave {
   createSawThooth(
     pitch: number,
     intensity: number,
-    multiplier: number,
-    invert?: boolean
+    phase: number,
+    multiplier: number
   ): number[] {
-    const invertNum = invert ? -1 : 1
     const { buffersize, num } = minBufferSize(this.samplerate, pitch)
     const num_list = []
     for (let i = 0; i <= buffersize; i++) {
       const t = (i / this.samplerate) * num * multiplier
       const value = 2 * (t * pitch - Math.floor(t * pitch + 0.5))
-      const thooth = value * intensity * invertNum
+      const thooth = value * intensity
       num_list.push(thooth)
     }
-    return num_list
+    const phaseNum = Math.floor(num_list.length * phase)
+    const sliceA = num_list.slice(0, phaseNum)
+    const sliceB = num_list.slice(phaseNum)
+    return [...sliceB, ...sliceA]
   }
 
   createTriangle(
     pitch: number,
     intensity: number,
+    phase: number,
     multiplier: number
   ): number[] {
     const { buffersize, num } = minBufferSize(this.samplerate, pitch)
@@ -67,33 +88,36 @@ class FundamentalWave {
       const thooth = value * intensity
       num_list.push(thooth)
     }
-    return num_list
+    const phaseNum = Math.floor(num_list.length * phase)
+    const sliceA = num_list.slice(0, phaseNum)
+    const sliceB = num_list.slice(phaseNum)
+    return [...sliceB, ...sliceA]
   }
 
   createSinContext(pitch: number) {
     const waveList = this.intensities.map((m, i) => {
-      return this.createSin(pitch, m, i + 1)
+      return this.createSin(pitch, m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
 
   createSquareContext(pitch: number) {
     const waveList = this.intensities.map((m, i) => {
-      return this.createSquare(pitch, m, i + 1)
+      return this.createSquare(pitch, m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
 
-  createSawThoothContext(pitch: number, invert?: boolean) {
+  createSawThoothContext(pitch: number) {
     const waveList = this.intensities.map((m, i) => {
-      return this.createSawThooth(pitch, m, i + 1, invert)
+      return this.createSawThooth(pitch, m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
 
   createTriangleContext(pitch: number) {
     const waveList = this.intensities.map((m, i) => {
-      return this.createTriangle(pitch, m, i + 1)
+      return this.createTriangle(pitch, m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
@@ -117,7 +141,7 @@ class FundamentalWave {
     }
   }
 
-  getWave(): number[] {
+  getWave(gain: number, phase: number): number[] {
     let wave: number[] = []
     if (this.wavelist.length > 0) {
       const harmonic_wave = new Array(this.wavelist[0].length).fill(0)
@@ -126,9 +150,12 @@ class FundamentalWave {
           harmonic_wave[j] += this.wavelist[i][j]
         }
       }
-      wave = harmonic_wave
+      const phaseNum = Math.floor(harmonic_wave.length * phase)
+      const sliceA = harmonic_wave.slice(0, phaseNum)
+      const sliceB = harmonic_wave.slice(phaseNum)
+      wave = [...sliceB, ...sliceA]
     }
-    return wave
+    return wave.map((m) => m * gain)
   }
 }
 

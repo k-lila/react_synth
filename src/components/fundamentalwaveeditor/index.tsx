@@ -6,9 +6,11 @@ import { RootReducer } from '../../store'
 import {
   addHarmonic,
   adjustGain,
+  adjustPhase,
   removeFundamental,
   removeHarmonic,
   setWaveGain,
+  setWavePhase,
   setWaveType
 } from '../../store/reducers/recipe'
 import FundamentalWave from '../../classes/fundamentalwave'
@@ -19,32 +21,46 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
   const dispatch = useDispatch()
   const wave = useSelector((state: RootReducer) => state.recipe).waves[id]
   const [gain, setGain] = useState(wave.amplitudes[0])
-  const [selected, setSelected] = useState(0)
+  const [phase, setPhase] = useState(wave.phases[0])
+  const [selected, setSelected] = useState(-1)
   const [waveExplosion, setWaveExplosion] = useState(false)
   const [popUp, setPopUp] = useState(false)
   const handleGain = (_gain: number) => {
     setGain(_gain)
   }
+  const handlePhase = (_phase: number) => {
+    setPhase(_phase)
+  }
 
   useEffect(() => {
     if (selected >= 0) {
       setGain(wave.amplitudes[selected])
+      setPhase(wave.phases[selected])
     } else {
       setGain(wave.gain)
+      setPhase(wave.phase)
     }
-  }, [selected, wave.amplitudes, wave.gain])
+  }, [selected, wave.amplitudes, wave.gain, wave.phases, wave.phase])
 
   useEffect(() => {
     if (selected >= 0) {
-      dispatch(adjustGain({ index: id, j: selected, gain: gain }))
+      dispatch(
+        adjustGain({ waveindex: id, amplitudeindex: selected, gain: gain })
+      )
+      dispatch(
+        adjustPhase({ waveindex: id, phaseindex: selected, phase: phase })
+      )
     } else {
       dispatch(setWaveGain({ waveid: id, gain: gain }))
+      dispatch(setWavePhase({ waveid: id, phase: phase }))
     }
-  }, [dispatch, id, gain])
+  }, [dispatch, id, gain, phase])
+
   const teste = new FundamentalWave(1000)
   teste.setIntensities(wave.amplitudes)
+  teste.setPhases(wave.phases)
   teste.createContext(1, wave.type)
-  const _wave = teste.getWave().map((m) => m * wave.gain)
+  const _wave = teste.getWave(wave.gain, wave.phase)
   const diff = (Math.max(..._wave) - Math.min(..._wave)) / 2
   const visualization = _wave.map((m) => (diff > 1 ? m / diff : m))
   const graphref = useRef<HTMLDivElement>(null)
@@ -118,19 +134,23 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
           X
         </button>
       </div>
-      <div className="slider">
-        {/* <BasicSlider
+      <div className="slider" style={{ borderRight: '2px solid black' }}>
+        <BasicSlider
           key={selected}
-          defaultgain={wave.amplitudes[selected]}
-          onGainChange={handleGain}
-        /> */}
+          min={0}
+          max={1}
+          defaultgain={selected >= 0 ? wave.phases[selected] : wave.phase}
+          onGainChange={handlePhase}
+        />
       </div>
       <div className="graph" ref={graphref}>
         {plot}
       </div>
-      <div className="slider">
+      <div className="slider" style={{ borderLeft: '2px solid black' }}>
         <BasicSlider
           key={selected}
+          min={-1}
+          max={1}
           defaultgain={selected >= 0 ? wave.amplitudes[selected] : wave.gain}
           onGainChange={handleGain}
         />
@@ -169,7 +189,10 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
           })}
         </div>
         <button
-          onClick={() => dispatch(addHarmonic(id))}
+          onClick={() => {
+            dispatch(addHarmonic(id))
+            setSelected(wave.amplitudes.length)
+          }}
           style={{ borderLeft: '2px solid black' }}
         >
           +
