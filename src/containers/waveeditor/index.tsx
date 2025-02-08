@@ -9,11 +9,9 @@ const WaveEditor = () => {
   const dispatch = useDispatch()
   return (
     <WaveEditorStyled>
-      {recipe.waves.length > 0
-        ? recipe.waves.map((_, i) => {
-            return <FundamentalWaveEditor key={i} id={i} />
-          })
-        : null}
+      {recipe.waves.map((_, i) => {
+        return <FundamentalWaveEditor key={i} id={i} />
+      })}
       <div className="add-btn">
         <button type="button" onClick={() => dispatch(addFundamental())}>
           <span>+</span>

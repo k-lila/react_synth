@@ -13,6 +13,8 @@ declare type PianoKeyboardProps = {
 
 declare type BasicSliderProps = {
   defaultgain: number
+  min: number
+  max: number
   horizontal?: boolean
   onGainChange?: (gain: number) => void
 }

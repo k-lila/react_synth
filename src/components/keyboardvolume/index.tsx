@@ -12,7 +12,12 @@ const KeyboardVolume = () => {
   }
   return (
     <KeyboardVolumeStyled>
-      <BasicSlider defaultgain={gain} onGainChange={handleGain} />
+      <BasicSlider
+        defaultgain={gain}
+        onGainChange={handleGain}
+        min={0}
+        max={1}
+      />
     </KeyboardVolumeStyled>
   )
 }

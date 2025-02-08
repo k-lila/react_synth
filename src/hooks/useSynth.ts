@@ -23,9 +23,13 @@ function useSynth() {
         const _list: number[][] = []
         for (let k = 0; k < recipe.waves.length; k++) {
           fundamental.setIntensities(recipe.waves[k].amplitudes)
+          fundamental.setPhases(recipe.waves[k].phases)
           fundamental.createContext(keyboard[i][j], recipe.waves[k].type)
-          const wave = fundamental.getWave()
-          _list.push(wave.map((m) => m * recipe.waves[k].gain))
+          const wave = fundamental.getWave(
+            recipe.waves[k].gain,
+            recipe.waves[k].phase
+          )
+          _list.push(wave)
         }
         const result: number[] = []
         for (let k = 0; k < _list[0].length; k++) {

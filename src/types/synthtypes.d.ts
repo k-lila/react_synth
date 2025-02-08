@@ -1,7 +1,9 @@
 declare type WaveRecipe = {
   type: string
   gain: number
+  phase: number
   amplitudes: number[]
+  phases: number[]
 }
 
 declare type SynthRecipe = {
