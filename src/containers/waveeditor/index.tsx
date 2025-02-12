@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { WaveEditorStyled } from './styles'
 import { RootReducer } from '../../store'
-import FundamentalWaveEditor from '../../components/fundamentalwaveeditor'
+import FundamentalWaveEditor from '../fundamentalwaveeditor'
 import { addFundamental } from '../../store/reducers/recipe'
 
 const WaveEditor = () => {
