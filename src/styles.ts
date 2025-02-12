@@ -17,6 +17,10 @@ export const GlobalStyle = createGlobalStyle`
     cursor: pointer;
   }
 
+  .--d-none {
+    display: none;
+  }
+
   .--bg-darkgray {
     background-color: darkgray;
   }

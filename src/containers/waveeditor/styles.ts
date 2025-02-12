@@ -8,7 +8,7 @@ export const WaveEditorStyled = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: auto;
-  background-color: black;
+  background-color: white;
 
   .add-btn {
     height: 100%;

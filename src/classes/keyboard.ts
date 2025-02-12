@@ -11,8 +11,8 @@ type KeyboardScales = {
 }
 
 class Keyboard extends ScaleGenerator {
-  public pitch: number
-  public keyboard: KeyboardScales
+  pitch: number
+  keyboard: KeyboardScales
   constructor(pitch: number) {
     super()
     this.pitch = pitch
