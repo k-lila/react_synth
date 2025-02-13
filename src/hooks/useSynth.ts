@@ -47,7 +47,7 @@ function useSynth() {
     return { naturalKeys, unnaturalKeys, naturalFrequencies }
   }, [audioCtx.sampleRate, recipe.waves, keyboard])
 
-  return { audioCtx, naturalKeys, unnaturalKeys, naturalFrequencies }
+  return { recipe, audioCtx, naturalKeys, unnaturalKeys, naturalFrequencies }
 }
 
 export default useSynth

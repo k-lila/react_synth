@@ -50,8 +50,13 @@ export const KeyboardVolumeStyled = styled.div`
     outline-offset: 0.125rem;
   }
 
-    }
   @media screen and (max-width: 767px) {
+    #slider::-webkit-slider-thumb {
+      width: 2em;
+    }
+    #slider::-moz-range-thumb {
+      width: 2em;
+    }
   }
   @media screen and (min-width: 768px) and (max-width: 1024px) {
   }

@@ -72,4 +72,13 @@ export const FundamentalWaveEditorStyled = styled.div`
     outline: 3px solid #808080;
     outline-offset: 0.125em;
   }
+
+  @media screen and (max-width: 767px) {
+    min-width: calc(50% - 2px);
+  }
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    min-width: calc(50% - 2px);
+  }
+  @media screen and (min-width: 1025px) {
+  }
 `

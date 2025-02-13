@@ -5,12 +5,13 @@ import WaveEditor from '../waveeditor'
 import { HarenatorStyled } from './styles'
 
 const Harenator = () => {
-  const { audioCtx, naturalKeys, naturalFrequencies } = useSynth()
+  const { recipe, audioCtx, naturalKeys, naturalFrequencies } = useSynth()
   return (
     <HarenatorStyled>
       <SynthWave />
       <WaveEditor />
       <PianoKeyboard
+        scale={recipe.scale}
         audioctx={audioCtx}
         naturalkeys={naturalKeys}
         naturalfrequencies={naturalFrequencies}
