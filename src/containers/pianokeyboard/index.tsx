@@ -28,11 +28,30 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
       />
     )
   }
-
   return (
     <PianoKeyboardStyled>
       <KeyboardVolume />
-      <KeyboardContainer>{keyboard}</KeyboardContainer>
+      <KeyboardContainer $num={keyboard.length}>
+        {keyboard}
+        {props.scale != 'pitagoric' ? (
+          <div className="teste">
+            {keyboard.map((_, i) => {
+              if (i != 0) {
+                if (props.scale == 'natural') {
+                  return (
+                    <div className="natural" key={i}>
+                      <div className="left" />
+                      <div className="right" />
+                    </div>
+                  )
+                } else {
+                  return <div className="teste2" key={i} />
+                }
+              }
+            })}
+          </div>
+        ) : null}
+      </KeyboardContainer>
     </PianoKeyboardStyled>
   )
 }

@@ -6,6 +6,7 @@ declare type PianoKeyProps = {
 }
 
 declare type PianoKeyboardProps = {
+  scale: string
   audioctx: AudioContext
   naturalkeys: number[][]
   naturalfrequencies: number[]
