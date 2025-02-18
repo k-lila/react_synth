@@ -55,9 +55,12 @@ export const SynthWaveStyled = styled.div`
     }
   }
   @media screen and (max-height: 400px) {
-    .menu--scales {
-      button {
-        font-size: 0.7em;
+    .menu {
+      font-size: 0.75em;
+      &--scales {
+        button {
+          font-size: 0.75em;
+        }
       }
     }
   }
