@@ -1,7 +1,7 @@
 import KeyboardVolume from '../../components/keyboardvolume'
 import PianoKey from '../../components/pianokey'
 import useKeyboardQWERTY from '../../hooks/useKeyboardQWERTY'
-import useWindowSize from '../../hooks/usewindowssize'
+import useWindowSize from '../../hooks/useWindowsSize'
 import { KeyboardContainer, PianoKeyboardStyled } from './styles'
 
 const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {

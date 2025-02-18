@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux'
-import SynthWindow from './components/synthwindow'
+import SynthWindow from './containers/synthwindow'
 import Harenator from './containers/harenator'
 import { Container, GlobalStyle } from './styles'
 import store from './store'

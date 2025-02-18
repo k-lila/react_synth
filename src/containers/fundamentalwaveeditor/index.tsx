@@ -1,20 +1,33 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import BasicSlider from '../../components/basicslider'
 import { FundamentalWaveEditorStyled } from './styles'
 import useFundamentalWaveView from '../../hooks/useFundamentalWaveView'
 import useWaveEditorState from '../../hooks/useWaveEditorState'
 import HarmonicControler from '../../components/harmoniccontroler'
 import WaveEditorHeader from '../../components/waveeditorheader'
+import useComponentSizes from '../../hooks/useComponentSizes'
+import LinePlot from '../../utils/lineplot'
 
 const FundamentalWaveEditor = ({ id }: { id: number }) => {
   const { selected, setGain, setPhase, setSelected, wave } =
     useWaveEditorState(id)
   const [waveExplosion, setWaveExplosion] = useState(false)
-  const { plot, graphref } = useFundamentalWaveView({
+  const graphref = useRef<HTMLDivElement>(null)
+  const componentSizes = useComponentSizes(graphref)
+  const fundamentalView = useFundamentalWaveView({
     id: id,
-    explosion: waveExplosion,
-    selected: selected
+    explosion: waveExplosion
   })
+  const plot = LinePlot(
+    fundamentalView,
+    componentSizes.width,
+    componentSizes.height,
+    5,
+    1,
+    5,
+    1,
+    selected
+  )
   return (
     <FundamentalWaveEditorStyled>
       <WaveEditorHeader
@@ -32,8 +45,10 @@ const FundamentalWaveEditor = ({ id }: { id: number }) => {
           onGainChange={setPhase}
         />
       </div>
-      <div className="graph" ref={graphref}>
-        {plot}
+      <div className="graph">
+        <div className="graph--plot" ref={graphref}>
+          {plot}
+        </div>
       </div>
       <div className="slider" style={{ borderLeft: '2px solid black' }}>
         <BasicSlider

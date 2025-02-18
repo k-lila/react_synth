@@ -2,10 +2,10 @@ import styled from 'styled-components'
 
 export const FundamentalWaveEditorStyled = styled.div`
   display: grid;
-  grid-template-columns: 1.75em auto 1.75em;
+  grid-template-columns: 1.75em calc(100% - 3.5em) 1.75em;
   grid-template-rows: 1.75em calc(100% - 4em) 2.25em;
   height: 100%;
-  min-width: 40%;
+  // min-width: 40%;
   border: 3px solid black;
   border-radius: 0.25em;
   margin-right: 1vmin;
@@ -14,11 +14,13 @@ export const FundamentalWaveEditorStyled = styled.div`
 
   .graph {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.25em;
-    height: 100%;
     width: 100%;
+    height: 100%;
+    &--plot {
+      display: flex;
+      height: 100%;
+      width: 100%;
+    }
   }
 
   .slider {
@@ -80,5 +82,6 @@ export const FundamentalWaveEditorStyled = styled.div`
     min-width: calc(50% - 2px);
   }
   @media screen and (min-width: 1025px) {
+    min-width: 40%;
   }
 `
