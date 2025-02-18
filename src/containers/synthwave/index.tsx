@@ -33,29 +33,25 @@ const SynthWave = () => {
         </div>
       </div>
       <div className="menu">
-        <div>
-          <div className="menu--input">
-            <label htmlFor="reference">afinação</label>
-            <input
-              type="number"
-              step={0.1}
-              min={2}
-              id="reference"
-              value={pitch}
-              onChange={(e) => handlePitchChange(Number(e.target.value))}
-            />
-          </div>
-          <div className="menu--scales">
-            <button onClick={() => dispatch(setScale('chromatic'))}>
-              cromatica
-            </button>
-            <button onClick={() => dispatch(setScale('natural'))}>
-              natural
-            </button>
-            <button onClick={() => dispatch(setScale('pitagoric'))}>
-              pitagorica
-            </button>
-          </div>
+        <div className="menu--input">
+          <label htmlFor="reference">afinação</label>
+          <input
+            type="number"
+            step={0.1}
+            min={2}
+            id="reference"
+            value={pitch}
+            onChange={(e) => handlePitchChange(Number(e.target.value))}
+          />
+        </div>
+        <div className="menu--scales">
+          <button onClick={() => dispatch(setScale('chromatic'))}>
+            cromatica
+          </button>
+          <button onClick={() => dispatch(setScale('natural'))}>natural</button>
+          <button onClick={() => dispatch(setScale('pitagoric'))}>
+            pitagorica
+          </button>
         </div>
       </div>
     </SynthWaveStyled>

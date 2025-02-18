@@ -46,6 +46,8 @@ export const SynthWaveStyled = styled.div`
     }
     &--scales {
       display: flex;
+      height: 100%;
+      justify-content: space-evenly;
       flex-direction: column;
       margin: 0.5em 0;
       button {
