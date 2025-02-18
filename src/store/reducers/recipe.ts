@@ -29,13 +29,21 @@ const WaveRecipeSlice = createSlice({
       state,
       action: PayloadAction<{ waveid: number; gain: number }>
     ) => {
-      state.waves[action.payload.waveid].gain = action.payload.gain
+      state.waves = state.waves.map((wave, i) =>
+        i === action.payload.waveid
+          ? { ...wave, gain: action.payload.gain }
+          : wave
+      )
     },
     setWavePhase: (
       state,
       action: PayloadAction<{ waveid: number; phase: number }>
     ) => {
-      state.waves[action.payload.waveid].phase = action.payload.phase
+      state.waves = state.waves.map((wave, i) =>
+        i === action.payload.waveid
+          ? { ...wave, phase: action.payload.phase }
+          : wave
+      )
     },
     setScale: (state, action: PayloadAction<string>) => {
       state.scale = action.payload
@@ -48,9 +56,16 @@ const WaveRecipeSlice = createSlice({
         gain: number
       }>
     ) => {
-      state.waves[action.payload.waveindex].amplitudes[
-        action.payload.amplitudeindex
-      ] = action.payload.gain
+      state.waves = state.waves.map((wave, i) =>
+        i === action.payload.waveindex
+          ? {
+              ...wave,
+              amplitudes: wave.amplitudes.map((amp, j) =>
+                j === action.payload.amplitudeindex ? action.payload.gain : amp
+              )
+            }
+          : wave
+      )
     },
     adjustPhase: (
       state,
@@ -60,44 +75,66 @@ const WaveRecipeSlice = createSlice({
         phase: number
       }>
     ) => {
-      state.waves[action.payload.waveindex].phases[action.payload.phaseindex] =
-        action.payload.phase
+      state.waves = state.waves.map((wave, i) =>
+        i === action.payload.waveindex
+          ? {
+              ...wave,
+              phases: wave.phases.map((ph, j) =>
+                j === action.payload.phaseindex ? action.payload.phase : ph
+              )
+            }
+          : wave
+      )
     },
     addHarmonic: (state, action: PayloadAction<number>) => {
-      state.waves[action.payload].amplitudes.push(
-        1 / (state.waves[action.payload].amplitudes.length + 1)
+      state.waves = state.waves.map((wave, i) =>
+        i === action.payload
+          ? {
+              ...wave,
+              amplitudes: [
+                ...wave.amplitudes,
+                1 / (wave.amplitudes.length + 1)
+              ],
+              phases: [...wave.phases, 0]
+            }
+          : wave
       )
-      state.waves[action.payload].phases.push(0)
     },
     removeHarmonic: (state, action: PayloadAction<number>) => {
-      if (state.waves[action.payload].amplitudes.length > 1) {
-        state.waves[action.payload].amplitudes = state.waves[
-          action.payload
-        ].amplitudes.slice(0, -1)
-        state.waves[action.payload].phases = state.waves[
-          action.payload
-        ].phases.slice(0, -1)
-      }
+      state.waves = state.waves.map((wave, i) =>
+        i === action.payload && wave.amplitudes.length > 1
+          ? {
+              ...wave,
+              amplitudes: wave.amplitudes.slice(0, -1),
+              phases: wave.phases.slice(0, -1)
+            }
+          : wave
+      )
     },
     addFundamental: (state) => {
-      state.waves.push({
-        type: 'sin',
-        gain: 1,
-        phase: 0,
-        amplitudes: [1],
-        phases: [0]
-      })
+      state.waves = [
+        ...state.waves,
+        {
+          type: 'sin',
+          gain: 1,
+          phase: 0,
+          amplitudes: [1],
+          phases: [0]
+        }
+      ]
     },
     removeFundamental: (state, action: PayloadAction<number>) => {
       if (state.waves.length > 1) {
-        state.waves = state.waves.filter((_, i) => i != action.payload)
+        state.waves = state.waves.filter((_, i) => i !== action.payload)
       }
     },
     setWaveType: (
       state,
       action: PayloadAction<{ id: number; type: string }>
     ) => {
-      state.waves[action.payload.id].type = action.payload.type
+      state.waves = state.waves.map((wave, i) =>
+        i === action.payload.id ? { ...wave, type: action.payload.type } : wave
+      )
     }
   }
 })
