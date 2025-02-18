@@ -30,7 +30,7 @@ export default function LinePlot(
         strokeWidth="2"
       />
       {data.map((m, i) => {
-        let stroke = 'gray'
+        let stroke = 'black'
         let strokeWidth = 0.5
         if (
           data.length === 1 ||

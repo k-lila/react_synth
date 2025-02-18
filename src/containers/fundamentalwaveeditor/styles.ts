@@ -5,7 +5,6 @@ export const FundamentalWaveEditorStyled = styled.div`
   grid-template-columns: 1.75em calc(100% - 3.5em) 1.75em;
   grid-template-rows: 1.75em calc(100% - 4em) 2.25em;
   height: 100%;
-  // min-width: 40%;
   border: 3px solid black;
   border-radius: 0.25em;
   margin-right: 1vmin;

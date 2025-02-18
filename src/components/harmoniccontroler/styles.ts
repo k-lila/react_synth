@@ -13,6 +13,9 @@ export const HarmonicControlerStyled = styled.div`
     height: 100%;
     width: 100%;
     border: none;
+    &:hover {
+      background-color: lightgray;
+    }
   }
   .button-container {
     display: flex;

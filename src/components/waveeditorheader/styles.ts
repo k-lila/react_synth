@@ -14,6 +14,9 @@ export const WaveEditorHeaderStyled = styled.header`
     height: 100%;
     width: 100%;
     border: none;
+    &:hover {
+      background-color: lightgray;
+    }
   }
   .typewave {
     width: 100%;

@@ -53,6 +53,11 @@ export const SynthWaveStyled = styled.div`
       button {
         margin: 0.25em 0;
         padding: 0.1em;
+        border: 2px solid black;
+        border-radius: 0.25em;
+        &:hover {
+          background-color: lightgray;
+        }
       }
     }
   }
