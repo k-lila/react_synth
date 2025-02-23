@@ -13,8 +13,13 @@ export const PianoKeyStyled = styled.div`
     display: flex;
     align-items: end;
     justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
     span {
-      margin-bottom: 2em;
+      margin-bottom: 1em;
     }
   }
 

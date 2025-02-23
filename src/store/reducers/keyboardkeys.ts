@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+type Key = {
+  id: number
+  keycode: string
+  pressed: boolean
+}
+
 type KeyboardQWERTY = {
-  naturalkeys: Array<{
-    id: number
-    keycode: string
-    pressed: boolean
-  }>
+  naturalkeys: Array<Key>
+  flatkeys: Array<Key>
+  sharpkeys: Array<Key>
 }
 
 const initialState: KeyboardQWERTY = {
@@ -22,6 +26,32 @@ const initialState: KeyboardQWERTY = {
     { id: 9, keycode: 'Semicolon', pressed: false },
     { id: 10, keycode: 'Quote', pressed: false },
     { id: 11, keycode: 'Backslash', pressed: false }
+  ],
+  flatkeys: [
+    { id: 100, keycode: 'Digit2', pressed: false },
+    { id: 101, keycode: 'Digit3', pressed: false },
+    { id: 102, keycode: 'Digit4', pressed: false },
+    { id: 103, keycode: 'Digit5', pressed: false },
+    { id: 104, keycode: 'Digit6', pressed: false },
+    { id: 105, keycode: 'Digit7', pressed: false },
+    { id: 106, keycode: 'Digit8', pressed: false },
+    { id: 107, keycode: 'Digit9', pressed: false },
+    { id: 108, keycode: 'Digit0', pressed: false },
+    { id: 109, keycode: 'Minus', pressed: false },
+    { id: 1010, keycode: 'Equal', pressed: false }
+  ],
+  sharpkeys: [
+    { id: 110, keycode: 'KeyW', pressed: false },
+    { id: 111, keycode: 'KeyE', pressed: false },
+    { id: 112, keycode: 'KeyR', pressed: false },
+    { id: 113, keycode: 'KeyT', pressed: false },
+    { id: 114, keycode: 'KeyY', pressed: false },
+    { id: 115, keycode: 'KeyU', pressed: false },
+    { id: 116, keycode: 'KeyI', pressed: false },
+    { id: 117, keycode: 'KeyO', pressed: false },
+    { id: 118, keycode: 'KeyP', pressed: false },
+    { id: 119, keycode: 'BracketLeft', pressed: false },
+    { id: 1110, keycode: 'BracketRight', pressed: false }
   ]
 }
 
@@ -33,17 +63,15 @@ const KeyboardQWERTYSlice = createSlice({
       state,
       action: PayloadAction<{ keycode: string; pressed: boolean }>
     ) => {
-      state.naturalkeys = state.naturalkeys.map((m) => {
-        if (m.keycode == action.payload.keycode) {
-          return {
-            id: m.id,
-            keycode: m.keycode,
-            pressed: action.payload.pressed
-          }
-        } else {
-          return m
-        }
-      })
+      const updateKeys = (keys: Key[]) =>
+        keys.map((key) =>
+          key.keycode === action.payload.keycode
+            ? { ...key, pressed: action.payload.pressed }
+            : key
+        )
+      state.naturalkeys = updateKeys(state.naturalkeys)
+      state.flatkeys = updateKeys(state.flatkeys)
+      state.sharpkeys = updateKeys(state.sharpkeys)
     },
     setKeyById: (
       state,
@@ -60,9 +88,26 @@ const KeyboardQWERTYSlice = createSlice({
           return m
         }
       })
+    },
+    setChromaticKeyById: (
+      state,
+      action: PayloadAction<{ keyid: number; pressed: boolean }>
+    ) => {
+      state.sharpkeys = state.sharpkeys.map((m) => {
+        if (m.id == action.payload.keyid) {
+          return {
+            id: m.id,
+            keycode: m.keycode,
+            pressed: action.payload.pressed
+          }
+        } else {
+          return m
+        }
+      })
     }
   }
 })
 
-export const { setKeyByCode, setKeyById } = KeyboardQWERTYSlice.actions
+export const { setKeyByCode, setKeyById, setChromaticKeyById } =
+  KeyboardQWERTYSlice.actions
 export default KeyboardQWERTYSlice.reducer

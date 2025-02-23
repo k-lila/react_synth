@@ -29,6 +29,7 @@ export const KeyboardContainer = styled.div<{ $num: number }>`
 
   .teste {
     position: absolute;
+    // pointer-events: none;
     width: 100%;
     height: 60%;
     display: flex;
@@ -36,7 +37,7 @@ export const KeyboardContainer = styled.div<{ $num: number }>`
     padding: 0 calc(100% / ${(props) => props.$num * 2});
   }
 
-  .teste2 {
+  .chromatic {
     background-color: rgba(50, 50, 50);
     border: 2px solid black;
     border-radius: 0.25em;

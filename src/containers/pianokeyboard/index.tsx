@@ -1,3 +1,4 @@
+import PianoBlackKey from '../../components/blackpianokey'
 import KeyboardVolume from '../../components/keyboardvolume'
 import PianoKey from '../../components/pianokey'
 import useKeyboardQWERTY from '../../hooks/useKeyboardQWERTY'
@@ -45,7 +46,26 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
                     </div>
                   )
                 } else {
-                  return <div className="teste2" key={i} />
+                  if (i === 3 || i === 7 || i === 10) {
+                    return (
+                      <div
+                        key={i}
+                        style={{ width: '2.25em', visibility: 'hidden' }}
+                      />
+                    )
+                  } else {
+                    const diff = i <= 3 ? 0 : i <= 7 ? 1 : i <= 10 ? 2 : 3
+                    const _i = i - diff - 1
+                    return (
+                      <PianoBlackKey
+                        key={`11${i - 1}`}
+                        id={Number(`11${i - 1}`)}
+                        frequency={props.unnaturalfrequencies[_i][0]}
+                        wavedata={props.unnaturalkeys[_i][0]}
+                        audioctx={props.audioctx}
+                      />
+                    )
+                  }
                 }
               }
             })}

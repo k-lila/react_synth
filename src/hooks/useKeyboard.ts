@@ -9,13 +9,23 @@ function useKeyboard() {
     const keyboard = new Keyboard(recipe.pitch)
     switch (recipe.scale) {
       case 'natural':
-        return keyboard.keyboard.natural
+        return [
+          keyboard.keyboard.natural,
+          keyboard.keyboard.naturalflats,
+          keyboard.keyboard.naturalsharps
+        ]
       case 'pitagoric':
-        return keyboard.keyboard.pitagoric
+        return [keyboard.keyboard.pitagoric]
       case 'chromatic':
-        return keyboard.keyboard.chromaticnatural
+        return [
+          keyboard.keyboard.chromaticnatural,
+          keyboard.keyboard.chromaticunnatural
+        ]
       default:
-        return keyboard.keyboard.chromaticnatural
+        return [
+          keyboard.keyboard.chromaticnatural,
+          keyboard.keyboard.chromaticunnatural
+        ]
     }
   }, [recipe.pitch, recipe.scale])
   return scale
