@@ -45,6 +45,9 @@ class Keyboard extends ScaleGenerator {
       const chromaticnatural = this.chromaticnaturalscale.map((num) => {
         return num * chromaticC
       })
+      const chromaticunnatural = this.chromaticunnaturalscale.map((num) => {
+        return num * chromaticC
+      })
       const naturalscale = this.naturalscale.map((num) => {
         return num * naturalC
       })
@@ -60,6 +63,7 @@ class Keyboard extends ScaleGenerator {
 
       _chromatic.push(chromaticscale)
       _chromaticnatural.push(chromaticnatural)
+      _chromaticunnatural.push(chromaticunnatural)
       _natural.push(naturalscale)
       _sharps.push(sharps)
       _flats.push(flats)

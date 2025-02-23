@@ -4,12 +4,14 @@ import { PianoKeyStyled } from './styles'
 import { RootReducer } from '../../store'
 import { useEffect } from 'react'
 import { setKeyById } from '../../store/reducers/keyboardkeys'
+import getKeyboardKey from '../../utils/getkeyboardkey'
 
 const PianoKey = ({ ...props }: PianoKeyProps) => {
   const dispatch = useDispatch()
   const { play, stop } = usePlayStop(props.wavedata, props.audioctx)
   const keyboardkey = useSelector((state: RootReducer) => state.keyboardkeys)
     .naturalkeys[props.id]
+
   const handleKeyDown = () => {
     if (!keyboardkey.pressed && keyboardkey.pressed != undefined) {
       dispatch(setKeyById({ keyid: props.id, pressed: true }))
@@ -38,7 +40,11 @@ const PianoKey = ({ ...props }: PianoKeyProps) => {
         className={keyboardkey.pressed ? '--bg-darkgray' : ''}
       >
         <span>
-          {Math.floor((Math.ceil(props.frequency * 1000) / 1000) * 100) / 100}
+          <div>
+            {Math.floor((Math.ceil(props.frequency * 1000) / 1000) * 100) / 100}
+            <br />
+            {`(${getKeyboardKey(keyboardkey ? keyboardkey.keycode : '')})`}
+          </div>
         </span>
       </button>
     </PianoKeyStyled>

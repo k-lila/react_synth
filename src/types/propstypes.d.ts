@@ -9,7 +9,9 @@ declare type PianoKeyboardProps = {
   scale: string
   audioctx: AudioContext
   naturalkeys: number[][]
+  unnaturalkeys: number[][][]
   naturalfrequencies: number[]
+  unnaturalfrequencies: number[][]
 }
 
 declare type BasicSliderProps = {

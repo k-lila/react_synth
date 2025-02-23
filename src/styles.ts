@@ -23,8 +23,16 @@ export const GlobalStyle = createGlobalStyle`
     display: none;
   }
 
+  .--hidden {
+    visibility: hidden;
+  }
+
   .--bg-darkgray {
     background-color: darkgray;
+  }
+
+  .--bg-blackkeypressed {
+    background-color: rgba(25, 25, 25) !important;
   }
 
   @media screen and (max-width: 767px) {
