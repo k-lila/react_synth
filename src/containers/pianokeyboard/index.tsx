@@ -35,7 +35,7 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
       <KeyboardContainer $num={keyboard.length}>
         {keyboard}
         {props.scale != 'pitagoric' ? (
-          <div className="teste">
+          <div className="black-keys-container">
             {keyboard.map((_, i) => {
               if (i != 0) {
                 if (props.scale == 'natural') {

@@ -27,9 +27,9 @@ export const KeyboardContainer = styled.div<{ $num: number }>`
   z-index: 0;
   position: relative;
 
-  .teste {
+  .black-keys-container {
     position: absolute;
-    // pointer-events: none;
+    pointer-events: none;
     width: 100%;
     height: 60%;
     display: flex;

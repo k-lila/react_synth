@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const PianoBlackKeyStyled = styled.div`
+  pointer-events: auto;
   width: 2.25em;
   height: 100%;
   button {
@@ -9,6 +10,11 @@ export const PianoBlackKeyStyled = styled.div`
     background-color: rgba(50, 50, 50);
     border: 2px solid black;
     border-radius: 0.25em;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
     span {
       font-size: 0.8em;
       color: white;
