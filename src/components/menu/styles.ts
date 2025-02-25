@@ -36,19 +36,36 @@ export const MenuStyled = styled.div`
     }
   }
 
-  @media screen and (max-height: 400px) {
-    font-size: 3.75svh;
+  @media screen and (max-height: 450px) {
+    flex-direction: column;
+    width: calc(25% - 1vmin);
+    height: 100%;
+    padding: 0;
+
+    .input {
+      margin-top: 1vmin;
+      padding: 0.2em;
+      flex-direction: column;
+      border: 1px solid black;
+      border-radius: 0.25em;
+      input {
+        padding: 0.25em;
+      }
+    }
     .scales {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      border: none;
+      flex-direction: column;
       button {
-        font-size: 3.75svh;
+        border: none;
+        border-top: 2px solid black;
+        padding: 0.75em 0;
       }
     }
   }
-  @media screen and (max-width: 768px) {
-    .scales {
-      overflow: auto;
-    }
-  }
+
   @media screen and (min-width: 768px) and (max-width: 1023px) {
     .scales {
       button {

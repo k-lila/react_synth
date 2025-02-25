@@ -25,4 +25,12 @@ export const SynthWaveStyled = styled.div`
       width: 100%;
     }
   }
+
+  @media screen and (max-height: 450px) {
+    flex-direction: row;
+    .graph {
+      height: 100%;
+      width: 75%;
+    }
+  }
 `
