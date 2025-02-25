@@ -40,6 +40,7 @@ export const MenuStyled = styled.div`
     flex-direction: column;
     width: calc(25% - 1vmin);
     height: 100%;
+    width: 5em;
     padding: 0;
 
     .input {
@@ -61,7 +62,7 @@ export const MenuStyled = styled.div`
       button {
         border: none;
         border-top: 2px solid black;
-        padding: 0.75em 0;
+        padding: 0.5em 0;
       }
     }
   }

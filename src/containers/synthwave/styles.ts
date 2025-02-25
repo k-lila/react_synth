@@ -30,7 +30,7 @@ export const SynthWaveStyled = styled.div`
     flex-direction: row;
     .graph {
       height: 100%;
-      width: 75%;
+      width: calc(100% - 5em - 1vmin);
     }
   }
 `
