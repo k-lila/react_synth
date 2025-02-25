@@ -46,11 +46,10 @@ export const MenuStyled = styled.div`
     .input {
       margin-top: 1vmin;
       padding: 0.2em;
-      flex-direction: column;
       border: 1px solid black;
       border-radius: 0.25em;
       input {
-        padding: 0.25em;
+        width: 3em;
       }
     }
     .scales {
