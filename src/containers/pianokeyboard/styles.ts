@@ -37,31 +37,7 @@ export const KeyboardContainer = styled.div<{ $num: number }>`
     padding: 0 calc(100% / ${(props) => props.$num * 2});
   }
 
-  .chromatic {
-    background-color: rgba(50, 50, 50);
-    border: 2px solid black;
-    border-radius: 0.25em;
-    width: 2.25em;
-    height: 100%;
-  }
-
   .natural {
     display: flex;
-  }
-
-  .left {
-    background-color: rgba(50, 50, 50);
-    border: 2px solid black;
-    border-radius: 0.25em 0 0 0.25em;
-    width: 1.5em;
-    height: 100%;
-  }
-
-  .right {
-    background-color: rgba(50, 50, 50);
-    border: 2px solid black;
-    border-radius: 0 0.25em 0.25em 0;
-    width: 1.5em;
-    height: 100%;
   }
 `

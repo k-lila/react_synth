@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
-export const PianoBlackKeyStyled = styled.div`
+export const PianoBlackKeyStyled = styled.div<{ $natural?: boolean }>`
   pointer-events: auto;
-  width: 2.25em;
+  width: ${(props) => (props.$natural ? '1.75em' : '2.25em')};
   height: 100%;
   button {
     height: 100%;
@@ -26,6 +26,13 @@ export const PianoBlackKeyStyled = styled.div`
       div {
         padding: 0;
         margin: 0;
+      }
+    }
+  }
+  @media screen and (max-height: 400px) {
+    button {
+      span {
+        font-size: 2.5svh;
       }
     }
   }

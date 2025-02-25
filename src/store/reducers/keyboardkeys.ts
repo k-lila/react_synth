@@ -77,37 +77,42 @@ const KeyboardQWERTYSlice = createSlice({
       state,
       action: PayloadAction<{ keyid: number; pressed: boolean }>
     ) => {
-      state.naturalkeys = state.naturalkeys.map((m) => {
-        if (m.id == action.payload.keyid) {
-          return {
-            id: m.id,
-            keycode: m.keycode,
-            pressed: action.payload.pressed
-          }
-        } else {
-          return m
-        }
-      })
+      const updateKeys = (keys: Key[]) =>
+        keys.map((key) =>
+          key.id === action.payload.keyid
+            ? { ...key, pressed: action.payload.pressed }
+            : key
+        )
+      state.naturalkeys = updateKeys(state.naturalkeys)
     },
     setChromaticKeyById: (
       state,
       action: PayloadAction<{ keyid: number; pressed: boolean }>
     ) => {
-      state.sharpkeys = state.sharpkeys.map((m) => {
-        if (m.id == action.payload.keyid) {
-          return {
-            id: m.id,
-            keycode: m.keycode,
-            pressed: action.payload.pressed
-          }
-        } else {
-          return m
-        }
-      })
+      state.sharpkeys = state.sharpkeys.map((key) =>
+        key.id === action.payload.keyid
+          ? { ...key, pressed: action.payload.pressed }
+          : key
+      )
+    },
+    setNaturalKeyById: (
+      state,
+      action: PayloadAction<{ keyid: number; pressed: boolean; flat?: boolean }>
+    ) => {
+      const keyList = action.payload.flat ? 'flatkeys' : 'sharpkeys'
+      state[keyList] = state[keyList].map((key) =>
+        key.id === action.payload.keyid
+          ? { ...key, pressed: action.payload.pressed }
+          : key
+      )
     }
   }
 })
 
-export const { setKeyByCode, setKeyById, setChromaticKeyById } =
-  KeyboardQWERTYSlice.actions
+export const {
+  setKeyByCode,
+  setKeyById,
+  setChromaticKeyById,
+  setNaturalKeyById
+} = KeyboardQWERTYSlice.actions
 export default KeyboardQWERTYSlice.reducer
