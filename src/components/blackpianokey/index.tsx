@@ -1,7 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { PianoBlackKeyStyled } from './styles'
 import { RootReducer } from '../../store'
-import { setChromaticKeyById } from '../../store/reducers/keyboardkeys'
+import {
+  setChromaticKeyById,
+  setNaturalKeyById
+} from '../../store/reducers/keyboardkeys'
 import { useEffect } from 'react'
 import usePlayStop from '../../hooks/usePlayStop'
 import getKeyboardKey from '../../utils/getkeyboardkey'
@@ -9,17 +12,40 @@ import getKeyboardKey from '../../utils/getkeyboardkey'
 const PianoBlackKey = ({ ...props }: PianoKeyProps) => {
   const dispatch = useDispatch()
   const { play, stop } = usePlayStop(props.wavedata, props.audioctx)
-  const keyboardkey = useSelector(
-    (state: RootReducer) => state.keyboardkeys
-  ).sharpkeys.find((f) => f.id === props.id)
+
+  const keyboardkey = useSelector((state: RootReducer) =>
+    props.natural && props.flat
+      ? state.keyboardkeys.flatkeys.find((f) => f.id === props.id)
+      : state.keyboardkeys.sharpkeys.find((f) => f.id === props.id)
+  )
 
   const handleKeyDown = () => {
     if (!keyboardkey?.pressed && keyboardkey?.pressed != undefined) {
-      dispatch(setChromaticKeyById({ keyid: props.id, pressed: true }))
+      if (props.natural) {
+        dispatch(
+          setNaturalKeyById({
+            keyid: props.id,
+            pressed: true,
+            flat: props.flat ? props.flat : false
+          })
+        )
+      } else {
+        dispatch(setChromaticKeyById({ keyid: props.id, pressed: true }))
+      }
     }
   }
   const handleKeyUp = () => {
-    dispatch(setChromaticKeyById({ keyid: props.id, pressed: false }))
+    if (props.natural) {
+      dispatch(
+        setNaturalKeyById({
+          keyid: props.id,
+          pressed: false,
+          flat: props.flat ? props.flat : false
+        })
+      )
+    } else {
+      dispatch(setChromaticKeyById({ keyid: props.id, pressed: false }))
+    }
   }
 
   useEffect(() => {
@@ -31,7 +57,7 @@ const PianoBlackKey = ({ ...props }: PianoKeyProps) => {
   }, [keyboardkey?.pressed, play, stop, keyboardkey])
 
   return (
-    <PianoBlackKeyStyled>
+    <PianoBlackKeyStyled $natural={props.natural ? props.natural : false}>
       <button
         onMouseDown={handleKeyDown}
         onMouseUp={handleKeyUp}

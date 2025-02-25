@@ -3,6 +3,8 @@ declare type PianoKeyProps = {
   frequency: number
   wavedata: number[]
   audioctx: AudioContext
+  natural?: boolean
+  flat?: boolean
 }
 
 declare type PianoKeyboardProps = {
