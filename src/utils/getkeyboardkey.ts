@@ -6,6 +6,9 @@ const getKeyboardKey = (keycode: string) => {
     .replace('Quote', '~')
     .replace('Backslash', ']')
     .replace('BracketRight', '[')
+    .replace('Minus', '-')
+    .replace('BracketLeft', '´')
+    .replace('Equal', '=')
   return keyboardkey
 }
 

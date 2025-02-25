@@ -41,7 +41,6 @@ export const GlobalStyle = createGlobalStyle`
   }
   @media screen and (min-width: 1024px) {
   }
-
 `
 export const Container = styled.div`
   color: white;
