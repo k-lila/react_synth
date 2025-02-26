@@ -19,6 +19,7 @@ export const PianoKeyboardStyled = styled.section`
     button {
       margin: 0 0.25em;
       border: 2px solid black;
+      border-radius: 0.25em;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -27,6 +28,12 @@ export const PianoKeyboardStyled = styled.section`
 
   @media screen and (max-height: 450px) {
     font-size: 0.8em;
+    .vol {
+      grid-template-rows: 15% 85%;
+      button {
+        font-size: 0.8em;
+      }
+    }
   }
 
   @media screen and (max-width: 600px) {
