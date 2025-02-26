@@ -1,6 +1,6 @@
 const minBufferSize = (
   samplerate: number,
-  pitch: number,
+  pitch: number
 ): { buffersize: number; num: number } => {
   const oscilationFrameSize = samplerate / pitch
   let counter = 1

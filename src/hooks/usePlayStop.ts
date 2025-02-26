@@ -4,8 +4,11 @@ import { RootReducer } from '../store'
 
 function usePlayStop(wave: number[], audioCtx: AudioContext) {
   const gain = useSelector((state: RootReducer) => state.recipe.gain)
+  const attack = 0.01
+  const release = 0.01
   const bufferRef = useRef<AudioBuffer | null>(null)
   const currentSourceRef = useRef<AudioBufferSourceNode | null>(null)
+  const gainNodeRef = useRef<GainNode | null>(null)
 
   const addBufferData = useCallback(
     (wave: number[]) => {
@@ -48,20 +51,38 @@ function usePlayStop(wave: number[], audioCtx: AudioContext) {
   const play = () => {
     if (audioCtx && bufferRef.current && !currentSourceRef.current) {
       const source = audioCtx.createBufferSource()
+      const gainNode = audioCtx.createGain()
       source.loop = true
       source.buffer = bufferRef.current
-      source.connect(audioCtx.destination)
+      const now = audioCtx.currentTime
+      gainNode.gain.cancelScheduledValues(now)
+      gainNode.gain.setValueAtTime(0, now)
+      gainNode.gain.linearRampToValueAtTime(gain, now + attack)
+      source.connect(gainNode)
+      gainNode.connect(audioCtx.destination)
       currentSourceRef.current = source
+      gainNodeRef.current = gainNode
       source.start()
     }
   }
+
   const stop = () => {
-    if (currentSourceRef.current) {
-      currentSourceRef.current.stop()
-      currentSourceRef.current.disconnect()
-      currentSourceRef.current = null
+    if (currentSourceRef.current && gainNodeRef.current) {
+      const now = audioCtx.currentTime
+      const gainNode = gainNodeRef.current
+      gainNode.gain.cancelScheduledValues(now)
+      gainNode.gain.setValueAtTime(gainNode.gain.value, now)
+      gainNode.gain.linearRampToValueAtTime(0, now + release)
+      setTimeout(() => {
+        currentSourceRef.current?.stop()
+        currentSourceRef.current?.disconnect()
+        gainNode.disconnect()
+        currentSourceRef.current = null
+        gainNodeRef.current = null
+      }, release * 1000)
     }
   }
+
   return { play, stop }
 }
 
