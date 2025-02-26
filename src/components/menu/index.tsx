@@ -11,9 +11,7 @@ const Menu = () => {
   return (
     <MenuStyled>
       <div className="input">
-        <label className="--bg-lightgray" htmlFor="reference">
-          {'Lá'}
-        </label>
+        <label htmlFor="reference">{'Lá'}</label>
         <input
           type="number"
           step={0.1}

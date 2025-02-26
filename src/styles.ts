@@ -27,8 +27,17 @@ export const GlobalStyle = createGlobalStyle`
     visibility: hidden;
   }
 
+
+  .--bg-lightgray {
+    background-color: lightgray;
+  }
+
   .--bg-darkgray {
     background-color: darkgray;
+  }
+
+  .--bg-darkergray {
+    background-color: rgba(100, 100, 100);
   }
 
   .--bg-blackkeypressed {

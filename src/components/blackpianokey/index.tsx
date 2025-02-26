@@ -66,14 +66,26 @@ const PianoBlackKey = ({ ...props }: PianoKeyProps) => {
         onTouchEnd={handleKeyUp}
         className={keyboardkey?.pressed ? '--bg-blackkeypressed' : ''}
       >
-        <span>
-          {`${Math.floor((Math.ceil(props.frequency * 1000) / 1000) * 100) / 100}`
-            .split('')
-            .map((char, i) => (
-              <div key={i}>{char}</div>
-            ))}
-          <div>{`(${getKeyboardKey(keyboardkey ? keyboardkey.keycode : '')})`}</div>
-        </span>
+        {props.infonum === 0 ? null : (
+          <span>
+            {props.infonum === 3
+              ? `${Math.floor((Math.ceil(props.frequency * 1000) / 1000) * 100) / 100}`
+                  .split('')
+                  .map((char, i) => <div key={i}>{char}</div>)
+              : null}
+            <div style={{ marginTop: '5px' }}>
+              {props.natural
+                ? props.infonum == 1
+                  ? `${getKeyboardKey(keyboardkey ? keyboardkey.keycode : '')}`
+                  : props.flat
+                    ? 'b'
+                    : '#'
+                : props.infonum == 1
+                  ? `${getKeyboardKey(keyboardkey ? keyboardkey.keycode : '')}`
+                  : '#/b'}
+            </div>
+          </span>
+        )}
       </button>
     </PianoBlackKeyStyled>
   )

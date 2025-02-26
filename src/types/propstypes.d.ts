@@ -5,6 +5,7 @@ declare type PianoKeyProps = {
   audioctx: AudioContext
   natural?: boolean
   flat?: boolean
+  infonum: number
 }
 
 declare type PianoKeyboardProps = {

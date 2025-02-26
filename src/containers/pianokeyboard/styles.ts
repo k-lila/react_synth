@@ -11,6 +11,24 @@ export const PianoKeyboardStyled = styled.section`
   border-radius: 0.25em;
   grid-column: span 2;
   background-color: white;
+
+  .vol {
+    display: grid;
+    grid-template-rows: 10% 90%;
+    height: 100%;
+    button {
+      margin: 0 0.25em;
+      border: 2px solid black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  @media screen and (max-height: 450px) {
+    font-size: 0.8em;
+  }
+
   @media screen and (max-width: 600px) {
     grid-column: span 1;
   }
@@ -31,7 +49,7 @@ export const KeyboardContainer = styled.div<{ $num: number }>`
     position: absolute;
     pointer-events: none;
     width: 100%;
-    height: 60%;
+    height: 65%;
     display: flex;
     justify-content: space-around;
     padding: 0 calc(100% / ${(props) => props.$num * 2});
