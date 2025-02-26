@@ -62,8 +62,8 @@ class FundamentalWave {
     const { buffersize, num } = minBufferSize(this.samplerate, pitch)
     const num_list = []
     for (let i = 0; i <= buffersize; i++) {
-      const t = (i / this.samplerate) * num * multiplier
-      const value = 2 * (t * pitch - Math.floor(t * pitch + 0.5))
+      const t = (i / buffersize) * num * multiplier
+      const value = 2 * (t - Math.floor(t + 0.5))
       const thooth = value * intensity
       num_list.push(thooth)
     }
@@ -82,9 +82,8 @@ class FundamentalWave {
     const { buffersize, num } = minBufferSize(this.samplerate, pitch)
     const num_list = []
     for (let i = 0; i <= buffersize; i++) {
-      const t = (i / this.samplerate) * num * multiplier + 0.25 / pitch
-      const value =
-        2 * Math.abs(2 * (t * pitch - Math.floor(t * pitch + 0.5))) - 1
+      const t = (i / buffersize) * num * multiplier + 0.25
+      const value = 2 * Math.abs(2 * (t - Math.floor(t + 0.5))) - 1
       const thooth = value * intensity
       num_list.push(thooth)
     }

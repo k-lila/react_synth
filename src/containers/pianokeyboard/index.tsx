@@ -34,6 +34,14 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
               return (
                 <div className="natural" key={i}>
                   <PianoBlackKey
+                    key={`11${i - 1}`}
+                    id={Number(`11${i - 1}`)}
+                    frequency={props.unnaturalfrequencies[i - 1][1]}
+                    wavedata={props.unnaturalkeys[i - 1][1]}
+                    audioctx={props.audioctx}
+                    natural
+                  />
+                  <PianoBlackKey
                     key={`10${i - 1}`}
                     id={Number(`10${i - 1}`)}
                     frequency={props.unnaturalfrequencies[i][0]}
@@ -41,14 +49,6 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
                     audioctx={props.audioctx}
                     natural
                     flat
-                  />
-                  <PianoBlackKey
-                    key={`11${i - 1}`}
-                    id={Number(`11${i - 1}`)}
-                    frequency={props.unnaturalfrequencies[i - 1][1]}
-                    wavedata={props.unnaturalkeys[i - 1][1]}
-                    audioctx={props.audioctx}
-                    natural
                   />
                 </div>
               )
