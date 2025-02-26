@@ -3,17 +3,14 @@ import { RootReducer } from '../store'
 import { useMemo, useRef } from 'react'
 import FundamentalWave from '../classes/fundamentalwave'
 import useKeyboard from './useKeyboard'
+import useMinBufferSizeMap from './useMinBufferSizeMap'
 
-function generateNote(
-  frequency: number,
-  waveRecipe: WaveRecipe[],
-  fundamental: FundamentalWave
-) {
+function generateNote(waveRecipe: WaveRecipe[], fundamental: FundamentalWave) {
   const _list: number[][] = []
   for (let k = 0; k < waveRecipe.length; k++) {
     fundamental.setIntensities(waveRecipe[k].amplitudes)
     fundamental.setPhases(waveRecipe[k].phases)
-    fundamental.createContext(frequency, waveRecipe[k].type)
+    fundamental.createContext(waveRecipe[k].type)
     const wave = fundamental.getWave(waveRecipe[k].gain, waveRecipe[k].phase)
     _list.push(wave)
   }
@@ -38,6 +35,13 @@ function useSynth() {
     audioCtxRef.current = new AudioContext()
   }
   const audioCtx = audioCtxRef.current
+
+  const minBufferSizeMap = useMinBufferSizeMap(
+    audioCtx.sampleRate,
+    keyboard,
+    recipe.scale
+  )
+
   const {
     naturalKeys,
     unnaturalKeys,
@@ -51,7 +55,12 @@ function useSynth() {
     const fundamental = new FundamentalWave(audioCtx.sampleRate)
     for (let i = 3; i < 5; i++) {
       for (let j = 0; j < keyboard[0][i].length; j++) {
-        const note = generateNote(keyboard[0][i][j], recipe.waves, fundamental)
+        const { buffersize, num } = minBufferSizeMap.get(keyboard[0][i][j]) || {
+          buffersize: 1,
+          num: 1
+        }
+        fundamental.setMinBufferSize(buffersize, num)
+        const note = generateNote(recipe.waves, fundamental)
         naturalKeys.push(note)
         naturalFrequencies.push(keyboard[0][i][j])
       }
@@ -60,15 +69,19 @@ function useSynth() {
           const unnaturalSet: number[][] = []
           const unnaturalFreq: number[] = []
           if (keyboard.length >= 2) {
-            unnaturalSet.push(
-              generateNote(keyboard[1][i][j], recipe.waves, fundamental)
-            )
+            const { buffersize, num } = minBufferSizeMap.get(
+              keyboard[1][i][j]
+            ) || { buffersize: 1, num: 1 }
+            fundamental.setMinBufferSize(buffersize, num)
+            unnaturalSet.push(generateNote(recipe.waves, fundamental))
             unnaturalFreq.push(keyboard[1][i][j])
           }
           if (keyboard.length === 3) {
-            unnaturalSet.push(
-              generateNote(keyboard[2][i][j], recipe.waves, fundamental)
-            )
+            const { buffersize, num } = minBufferSizeMap.get(
+              keyboard[2][i][j]
+            ) || { buffersize: 1, num: 1 }
+            fundamental.setMinBufferSize(buffersize, num)
+            unnaturalSet.push(generateNote(recipe.waves, fundamental))
             unnaturalFreq.push(keyboard[2][i][j])
           }
           unnaturalKeys.push(unnaturalSet)
@@ -82,7 +95,13 @@ function useSynth() {
       naturalFrequencies,
       unnaturalFrequencies
     }
-  }, [audioCtx.sampleRate, recipe.waves, keyboard, recipe.scale])
+  }, [
+    audioCtx.sampleRate,
+    recipe.waves,
+    keyboard,
+    recipe.scale,
+    minBufferSizeMap
+  ])
 
   return {
     recipe,

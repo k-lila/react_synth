@@ -12,7 +12,7 @@ const minBufferSize = (
       minFractionalPart = fractionalPart
       bestCounter = counter
     }
-    if (minFractionalPart < 0.01 || counter === 100) break
+    if (minFractionalPart < 0.01 || counter === 25) break
     counter++
   }
   const bufferSize = Math.round(oscilationFrameSize * bestCounter)

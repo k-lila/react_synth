@@ -1,15 +1,15 @@
-import minBufferSize from '../utils/minbuffersize'
-
 class FundamentalWave {
   samplerate: number
   intensities: number[]
   phases: number[]
   wavelist: number[][]
+  minbuffersize: { minbuffer: number; num: number }
   constructor(samplerate: number) {
     this.samplerate = samplerate
     this.intensities = [1]
     this.phases = [1]
     this.wavelist = []
+    this.minbuffersize = { minbuffer: this.samplerate, num: 1 }
   }
 
   setIntensities(intensities: number[]) {
@@ -20,18 +20,17 @@ class FundamentalWave {
     return (this.phases = phases)
   }
 
-  createSin(
-    pitch: number,
-    intensity: number,
-    phase: number,
-    multiplier: number
-  ): number[] {
-    const { buffersize, num } = minBufferSize(this.samplerate, pitch)
+  setMinBufferSize(buffersize: number, num: number) {
+    return (this.minbuffersize = { minbuffer: buffersize, num: num })
+  }
+
+  createSin(intensity: number, phase: number, multiplier: number): number[] {
+    const { minbuffer, num } = this.minbuffersize
     const num_list: number[] = []
-    for (let i = 0; i <= buffersize; i++) {
+    for (let i = 0; i <= minbuffer; i++) {
       const sinPosition =
         Math.sin(
-          ((2 * Math.PI * i) / buffersize) * (num * multiplier) +
+          ((2 * Math.PI * i) / minbuffer) * (num * multiplier) +
             phase * 2 * Math.PI
         ) * intensity
       num_list.push(sinPosition)
@@ -39,13 +38,8 @@ class FundamentalWave {
     return num_list
   }
 
-  createSquare(
-    pitch: number,
-    intensity: number,
-    phase: number,
-    multiplier: number
-  ): number[] {
-    const sin = this.createSin(pitch, 1, phase, multiplier)
+  createSquare(intensity: number, phase: number, multiplier: number): number[] {
+    const sin = this.createSin(1, phase, multiplier)
     const num_list = sin.map((m) => {
       const square = m >= 0 ? 1 : -1
       return square * intensity
@@ -54,15 +48,14 @@ class FundamentalWave {
   }
 
   createSawThooth(
-    pitch: number,
     intensity: number,
     phase: number,
     multiplier: number
   ): number[] {
-    const { buffersize, num } = minBufferSize(this.samplerate, pitch)
+    const { minbuffer, num } = this.minbuffersize
     const num_list = []
-    for (let i = 0; i <= buffersize; i++) {
-      const t = (i / buffersize) * num * multiplier
+    for (let i = 0; i <= minbuffer; i++) {
+      const t = (i / minbuffer) * num * multiplier
       const value = 2 * (t - Math.floor(t + 0.5))
       const thooth = value * intensity
       num_list.push(thooth)
@@ -74,15 +67,14 @@ class FundamentalWave {
   }
 
   createTriangle(
-    pitch: number,
     intensity: number,
     phase: number,
     multiplier: number
   ): number[] {
-    const { buffersize, num } = minBufferSize(this.samplerate, pitch)
+    const { minbuffer, num } = this.minbuffersize
     const num_list = []
-    for (let i = 0; i <= buffersize; i++) {
-      const t = (i / buffersize) * num * multiplier + 0.25
+    for (let i = 0; i <= minbuffer; i++) {
+      const t = (i / minbuffer) * num * multiplier + 0.25
       const value = 2 * Math.abs(2 * (t - Math.floor(t + 0.5))) - 1
       const thooth = value * intensity
       num_list.push(thooth)
@@ -93,50 +85,50 @@ class FundamentalWave {
     return [...sliceB, ...sliceA]
   }
 
-  createSinContext(pitch: number) {
+  createSinContext() {
     const waveList = this.intensities.map((m, i) => {
-      return this.createSin(pitch, m, this.phases[i], i + 1)
+      return this.createSin(m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
 
-  createSquareContext(pitch: number) {
+  createSquareContext() {
     const waveList = this.intensities.map((m, i) => {
-      return this.createSquare(pitch, m, this.phases[i], i + 1)
+      return this.createSquare(m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
 
-  createSawThoothContext(pitch: number) {
+  createSawThoothContext() {
     const waveList = this.intensities.map((m, i) => {
-      return this.createSawThooth(pitch, m, this.phases[i], i + 1)
+      return this.createSawThooth(m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
 
-  createTriangleContext(pitch: number) {
+  createTriangleContext() {
     const waveList = this.intensities.map((m, i) => {
-      return this.createTriangle(pitch, m, this.phases[i], i + 1)
+      return this.createTriangle(m, this.phases[i], i + 1)
     })
     this.wavelist = waveList
   }
 
-  createContext(pitch: number, typewave: string) {
+  createContext(typewave: string) {
     switch (typewave) {
       case 'sin':
-        this.createSinContext(pitch)
+        this.createSinContext()
         break
       case 'square':
-        this.createSquareContext(pitch)
+        this.createSquareContext()
         break
       case 'saw':
-        this.createSawThoothContext(pitch)
+        this.createSawThoothContext()
         break
       case 'tri':
-        this.createTriangleContext(pitch)
+        this.createTriangleContext()
         break
       default:
-        this.createSinContext(pitch)
+        this.createSinContext()
     }
   }
 

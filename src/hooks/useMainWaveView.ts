@@ -11,7 +11,7 @@ function useMainWaveView() {
     recipe.waves.forEach((wave) => {
       _visualization.setIntensities(wave.amplitudes)
       _visualization.setPhases(wave.phases)
-      _visualization.createContext(1, wave.type)
+      _visualization.createContext(wave.type)
       _list.push(_visualization.getWave(wave.gain, wave.phase))
     })
     const result: number[] = []
