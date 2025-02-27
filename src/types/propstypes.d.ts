@@ -38,3 +38,8 @@ declare type HarmonicControlerProps = {
   selected: number
   setSelected: React.Dispatch<React.SetStateAction<number>>
 }
+
+declare type SVGContainerProps = {
+  src: string
+  alt: string
+}

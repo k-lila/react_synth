@@ -21,7 +21,8 @@ export const HarmonicControlerStyled = styled.div`
     display: flex;
     height: 100%;
     width: 100%;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     button {
       width: 20%;
       min-width: 20%;

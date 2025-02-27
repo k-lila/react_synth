@@ -10,4 +10,8 @@ export const WaveChoosePopUpStyled = styled.div`
   grid-template-rows: 2em 2em 2em 2em;
   background-color: white;
   align-items: center;
+
+  @media screen and (max-height: 450px) {
+    grid-template-rows: 1em 1em 1em 1em;
+  }
 `

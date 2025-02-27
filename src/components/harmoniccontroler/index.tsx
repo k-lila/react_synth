@@ -1,6 +1,10 @@
 import { addHarmonic, removeHarmonic } from '../../store/reducers/recipe'
 import { useDispatch } from 'react-redux'
 import { HarmonicControlerStyled } from './styles'
+import minus from '../../assets/minus.svg'
+import plus from '../../assets/plus.svg'
+import all from '../../assets/all.svg'
+import SVGContainer from '../svgcontainer'
 
 const HarmonicControler = ({ ...props }: HarmonicControlerProps) => {
   const dispatch = useDispatch()
@@ -17,7 +21,7 @@ const HarmonicControler = ({ ...props }: HarmonicControlerProps) => {
           dispatch(removeHarmonic(props.id))
         }}
       >
-        -
+        <SVGContainer src={minus} alt="remove" />
       </button>
       <div className="button-container">
         <button
@@ -26,7 +30,7 @@ const HarmonicControler = ({ ...props }: HarmonicControlerProps) => {
             props.setSelected(-1)
           }}
         >
-          ~
+          <SVGContainer src={all} alt="all" />
         </button>
         {props.wave.amplitudes.map((_, i) => {
           return (
@@ -47,7 +51,7 @@ const HarmonicControler = ({ ...props }: HarmonicControlerProps) => {
         }}
         style={{ borderLeft: '2px solid black' }}
       >
-        +
+        <SVGContainer src={plus} alt="add" />
       </button>
     </HarmonicControlerStyled>
   )

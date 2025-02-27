@@ -27,7 +27,6 @@ export const GlobalStyle = createGlobalStyle`
     visibility: hidden;
   }
 
-
   .--bg-lightgray {
     background-color: lightgray;
   }
