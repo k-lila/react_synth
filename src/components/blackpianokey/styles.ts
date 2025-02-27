@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const PianoBlackKeyStyled = styled.div<{ $natural?: boolean }>`
   pointer-events: auto;
-  width: ${(props) => (props.$natural ? '1.75em' : '2.25em')};
+  width: ${(props) => (props.$natural ? '1.75em' : '2.5em')};
   height: 100%;
   button {
     height: 100%;

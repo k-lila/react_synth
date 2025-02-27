@@ -27,7 +27,6 @@ export const WaveEditorHeaderStyled = styled.header`
     justify-content: center;
     position: relative;
     button {
-      background-color: red;
       width: fit-content;
       padding: 0 1em;
       border-right: 2px solid black;
