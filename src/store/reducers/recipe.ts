@@ -2,15 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 const initialState: SynthRecipe = {
   pitch: 440,
-  gain: 0.7,
+  gain: 0.75,
   scale: 'chromatic',
   waves: [
     {
       type: 'sin',
       gain: 0.9,
       phase: 0,
-      amplitudes: [0.66, -0.33],
-      phases: [0, 0]
+      amplitudes: [0.66, -0.33, 0, -0.2, 0, 0.1],
+      phases: [0, 0, 0, 0.5, 0, 0]
     }
   ]
 }

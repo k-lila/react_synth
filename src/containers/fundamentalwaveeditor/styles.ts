@@ -39,7 +39,6 @@ export const FundamentalWaveEditorStyled = styled.div`
     -webkit-appearance: none;
     appearance: none;
     margin-top: 0px;
-    background-color: darkgray;
     border-radius: 0.1em;
     height: 1.75em;
     width: 3em;
@@ -48,21 +47,18 @@ export const FundamentalWaveEditorStyled = styled.div`
   }
 
   #slider:focus::-webkit-slider-thumb {
-    outline: 3px solid #808080;
     outline-offset: 0.125em;
   }
 
   /*********** Firefox styles ***********/
   /* slider track */
   #slider::-moz-range-track {
-    background-color: darkgray;
     height: 100%;
     width: 0.5em;
   }
 
   /* slider thumb */
   #slider::-moz-range-thumb {
-    background-color: gray;
     border-radius: 0.1em;
     border: none;
     height: 1.75em;
@@ -70,7 +66,6 @@ export const FundamentalWaveEditorStyled = styled.div`
   }
 
   #slider:focus::-moz-range-thumb {
-    outline: 3px solid #808080;
     outline-offset: 0.125em;
   }
 

@@ -20,6 +20,17 @@ const BasicSlider = ({ ...props }: BasicSliderProps) => {
         max={props.max}
         className={props.horizontal ? '' : 'vertical'}
       />
+      <div className="marks">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
     </BasicSliderStyled>
   )
 }
