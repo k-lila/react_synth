@@ -8,6 +8,7 @@ function useMinBufferSizeMap(
 ) {
   return useMemo(() => {
     const map = new Map<number, { buffersize: number; num: number }>()
+    // iteração que cria as oitavas => sincronizar let i com useSynth
     for (let i = 3; i < 5; i++) {
       for (let j = 0; j < keyboard[0][i].length; j++) {
         const frequency = keyboard[0][i][j]

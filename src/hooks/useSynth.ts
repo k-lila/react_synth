@@ -53,6 +53,7 @@ function useSynth() {
     const naturalFrequencies: number[] = []
     const unnaturalFrequencies: number[][] = []
     const fundamental = new FundamentalWave(audioCtx.sampleRate)
+    // iteração que cria as oitavas => sincronizar let i em useMinBufferSizeMap
     for (let i = 3; i < 5; i++) {
       for (let j = 0; j < keyboard[0][i].length; j++) {
         const { buffersize, num } = minBufferSizeMap.get(keyboard[0][i][j]) || {

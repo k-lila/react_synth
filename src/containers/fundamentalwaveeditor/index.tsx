@@ -11,7 +11,7 @@ import LinePlot from '../../utils/lineplot'
 const FundamentalWaveEditor = ({ id }: { id: number }) => {
   const { selected, setGain, setPhase, setSelected, wave } =
     useWaveEditorState(id)
-  const [waveExplosion, setWaveExplosion] = useState(false)
+  const [waveExplosion, setWaveExplosion] = useState(true)
   const graphref = useRef<HTMLDivElement>(null)
   const componentSizes = useComponentSizes(graphref)
   const fundamentalView = useFundamentalWaveView({
