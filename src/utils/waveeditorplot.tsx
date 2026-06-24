@@ -1,5 +1,15 @@
 import * as d3 from 'd3'
 
+/**
+ * Renderiza, via D3, um SVG com as séries em traço fino uniforme, sobre um eixo Y
+ * fixo `[-1, 1]`.
+ *
+ * @param data - séries a plotar (`number[][]`), todas do mesmo comprimento e
+ *   assumidas normalizadas em ±1
+ * @returns o elemento SVG do gráfico
+ * @remarks Variante de {@link LinePlot} sem destaque de série — todas as linhas
+ *   têm a mesma espessura.
+ */
 function waveEditorPlot(
   data: number[][],
   width: number,

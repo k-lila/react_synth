@@ -1,3 +1,13 @@
+/**
+ * Gera as escalas musicais do sintetizador como **razões de frequência
+ * adimensionais** dentro de uma oitava (intervalo `[1, 2)`), não em Hz — a
+ * conversão para Hz acontece em {@link Keyboard}.
+ *
+ * @remarks As escalas natural/sustenidos/bemóis usam entonação justa (razões de
+ *   inteiros, potências de 3 e 5); a cromática usa temperamento igual (semitom
+ *   `2^(1/12)`); a pitagórica, apenas potências de 3. O construtor pré-calcula e
+ *   guarda todas as escalas nos atributos públicos.
+ */
 class ScaleGenerator {
   chromaticscale: number[]
   chromaticnaturalscale: number[]
@@ -17,6 +27,14 @@ class ScaleGenerator {
     this.pitagoricscale = this.getPitagoricScale()
   }
 
+  /**
+   * Gera os 12 graus da escala cromática por temperamento igual (`2^(i/12)`) e,
+   * de quebra, particiona-os em naturais e acidentes.
+   *
+   * @returns as 12 razões da oitava, da fundamental (`1`) ao próximo semitom da oitava
+   * @remarks Efeito colateral: preenche `chromaticnaturalscale` e
+   *   `chromaticunnaturalscale` conforme cada grau seja natural ou acidente.
+   */
   getChromaticScale(): number[] {
     const semitom = 2 ** (1 / 12)
     const chromatic_sequence = [0, 2, 4, 5, 7, 9, 11]
@@ -33,6 +51,12 @@ class ScaleGenerator {
     return chromaticscale
   }
 
+  /**
+   * Gera as 7 notas naturais por entonação justa, dobradas/dividas até caírem no
+   * intervalo `[1, 2)`.
+   *
+   * @returns as razões de C, D, E, F, G, A, B na ordem da escala
+   */
   getNaturalScale(): number[] {
     const c = 1
     const g = c * 3
@@ -56,6 +80,13 @@ class ScaleGenerator {
     return naturalscale
   }
 
+  /**
+   * Gera os sustenidos da escala natural empilhando quintas (potências de 3) a
+   * partir do último grau natural, normalizados à oitava.
+   *
+   * @returns as razões dos sustenidos, ordenadas de forma crescente
+   * @remarks Requer `naturalscale` já calculada (feito no construtor).
+   */
   getNaturalSharps(): number[] {
     const sharpNum = this.naturalscale[this.naturalscale.length - 1]
     const sharpList = []
@@ -69,6 +100,13 @@ class ScaleGenerator {
     return sharpList.sort((x, y) => x - y)
   }
 
+  /**
+   * Gera os bemóis da escala natural descendo por quintas (`1/3^i`) a partir de
+   * um grau natural, normalizados à oitava.
+   *
+   * @returns as razões dos bemóis, ordenadas de forma crescente
+   * @remarks Requer `naturalscale` já calculada (feito no construtor).
+   */
   getNaturalFlats(): number[] {
     const flatNum = this.naturalscale[3]
     const flatList = []
@@ -82,6 +120,12 @@ class ScaleGenerator {
     return flatList.sort((x, y) => x - y)
   }
 
+  /**
+   * Gera os 7 graus da escala pitagórica empilhando quintas puras (potências de
+   * 3), normalizados à oitava.
+   *
+   * @returns as razões da escala pitagórica, ordenadas de forma crescente
+   */
   getPitagoricScale(): number[] {
     const pitagoricscale = []
     for (let i = 0; i < 7; i++) {

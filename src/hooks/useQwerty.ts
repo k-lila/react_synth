@@ -1,5 +1,13 @@
 import { useEffect } from 'react'
 
+/**
+ * Hook base que escuta `keydown`/`keyup` no `document` e repassa o `event.code`.
+ *
+ * @param onKeyDown - callback ao pressionar; recebe o `code` da tecla (layout físico)
+ * @param onKeyUp - callback ao soltar; recebe o `code` da tecla
+ * @remarks Usa `event.code` (posição física), não `event.key` (caractere). Os
+ *   listeners são removidos no cleanup; memoize os callbacks para não reanexar.
+ */
 function useQWERTY(
   onKeyDown?: (key: string) => void,
   onKeyUp?: (key: string) => void

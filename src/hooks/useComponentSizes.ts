@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 
+/**
+ * Acompanha o bounding rect de um elemento, atualizando a cada `resize`.
+ *
+ * @param ref - referência ao elemento observado
+ * @returns posição e tamanho (`top`/`right`/`bottom`/`left`/`height`/`width`) em
+ *   px, relativos à viewport
+ */
 function useComponentSizes(ref: React.RefObject<HTMLDivElement>) {
   const [sizes, setSizes] = useState({
     top: 0,

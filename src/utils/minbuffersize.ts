@@ -1,3 +1,14 @@
+/**
+ * Calcula um buffer de **ciclos inteiros** para uma frequência, de modo que o PCM
+ * possa tocar em loop sem cliques nas bordas.
+ *
+ * @param samplerate - taxa de amostragem, em Hz
+ * @param pitch - frequência da nota, em Hz
+ * @returns `buffersize` (nº de amostras, arredondado) e `num` (nº de períodos
+ *   contidos no buffer)
+ * @remarks Busca o nº de ciclos que minimiza a parte fracionária do período em
+ *   amostras; para assim que a fração fica < 0.01 ou ao atingir 25 ciclos.
+ */
 const minBufferSize = (
   samplerate: number,
   pitch: number

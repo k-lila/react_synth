@@ -94,6 +94,14 @@ preferência pessoal; na dúvida, espelhe o arquivo vizinho.
 - styled-components por componente, exportado como `XStyled`; props transientes com `$`.
 - Classes utilitárias globais com prefixo `--`.
 
+**Documentação (TSDoc)**
+- API pública do núcleo (`classes/` exportadas, hooks `useX`, `utils/` exportados) leva
+  TSDoc; `private`/helpers triviais não. Comente o *porquê* e o contrato não-óbvio
+  (unidade, faixa, invariante, ordem de chamada), nunca o que o tipo já diz.
+- Tags permitidas: `@param` `@returns` `@remarks` `@throws` `@example` `@see`
+  `@deprecated`. Regra de ouro do `@param`: só documente se acrescentar unidade/faixa/
+  invariante; senão, omita. Detalhes e *porquê*: **[ADR-0002](docs/adr/0002-padrao-tsdoc.md)**.
+
 **Geral**
 - Reuse/estenda antes de criar (DRY); não abstraia sem segundo uso (YAGNI).
 - Nomes descritivos em português; clareza acima de esperteza.

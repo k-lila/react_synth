@@ -2,6 +2,17 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { RootReducer } from '../store'
 
+/**
+ * Toca e para um PCM pré-renderizado em loop, com envelope de attack/release.
+ *
+ * @param wave - PCM de um período, esperado normalizado em ±1
+ * @param audioCtx - contexto de áudio compartilhado (vindo de {@link useSynth})
+ * @returns `play`/`stop`; `play` ignora chamadas se já houver som ativo
+ * @remarks Loop infinito (`source.loop = true`); attack e release são rampas
+ *   lineares fixas de 0.01 s; o buffer é escalado por `gain * 0.5` para evitar
+ *   clipping ao somar harmônicos.
+ * @see ADR-0001 — PCM pré-renderizado em loop
+ */
 function usePlayStop(wave: number[], audioCtx: AudioContext) {
   const gain = useSelector((state: RootReducer) => state.recipe.gain)
   const attack = 0.01

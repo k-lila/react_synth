@@ -3,6 +3,13 @@ import { RootReducer } from '../store'
 import { useMemo } from 'react'
 import Keyboard from '../classes/keyboard'
 
+/**
+ * Constrói o teclado de frequências (Hz) da escala ativa a partir de `recipe`.
+ *
+ * @returns os planos da escala no formato `[plano][oitava][nota]`: `natural` tem
+ *   3 planos (naturais, bemóis, sustenidos), `chromatic` tem 2 (naturais,
+ *   acidentes) e `pitagoric` tem 1.
+ */
 function useKeyboard() {
   const recipe = useSelector((state: RootReducer) => state.recipe)
   const scale = useMemo(() => {

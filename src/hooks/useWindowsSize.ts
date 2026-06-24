@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 
+/**
+ * Acompanha o tamanho da viewport, em px, atualizando a cada `resize`.
+ */
 function useWindowSize() {
   const [size, setSize] = useState({
     windowsize: {
