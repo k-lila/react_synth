@@ -19,6 +19,7 @@ const initial: SynthRecipe = {
   pitch: 440,
   gain: 0.75,
   scale: 'chromatic',
+  octaves: [3, 4],
   waves: [
     {
       type: 'sin',

@@ -1,29 +1,78 @@
+/**
+ * Síntese aditiva de uma onda periódica pela soma de parciais (série de Fourier).
+ *
+ * Fluxo de uso: configure os parciais com {@link setIntensities} e {@link setPhases},
+ * garanta ciclos inteiros com {@link setMinBufferSize}, gere o contexto de um tipo de
+ * onda com {@link createContext} e obtenha o PCM final com {@link getWave}.
+ *
+ * @remarks O parcial de índice `i` corresponde ao harmônico de frequência
+ *   `(i + 1) × fundamental` — ver o multiplicador aplicado em {@link createContext}.
+ */
 class FundamentalWave {
   samplerate: number
   intensities: number[]
   phases: number[]
   wavelist: number[][]
   minbuffersize: { minbuffer: number; num: number }
+  generators: Record<
+    string,
+    (intensity: number, phase: number, multiplier: number) => number[]
+  >
   constructor(samplerate: number) {
     this.samplerate = samplerate
     this.intensities = [1]
     this.phases = [1]
     this.wavelist = []
     this.minbuffersize = { minbuffer: this.samplerate, num: 1 }
+    this.generators = {
+      sin: this.createSin.bind(this),
+      square: this.createSquare.bind(this),
+      saw: this.createSawTooth.bind(this),
+      tri: this.createTriangle.bind(this)
+    }
   }
 
+  /**
+   * Define a amplitude de cada parcial (índice `i` = harmônico `(i+1)×fundamental`).
+   *
+   * @param intensities - amplitudes dos parciais, em paralelo com {@link setPhases}
+   */
   setIntensities(intensities: number[]) {
-    return (this.intensities = intensities)
+    this.intensities = intensities
   }
 
+  /**
+   * Define a fase de cada parcial.
+   *
+   * @param phases - fases em frações de ciclo (0–1), paralelo a {@link setIntensities}
+   */
   setPhases(phases: number[]) {
-    return (this.phases = phases)
+    this.phases = phases
   }
 
+  /**
+   * Fixa o tamanho do buffer de um ciclo, garantindo ciclos inteiros para loop sem cliques.
+   *
+   * @param buffersize - nº de amostras de um período da fundamental
+   * @param num - quantos períodos da fundamental cabem no buffer
+   */
   setMinBufferSize(buffersize: number, num: number) {
-    return (this.minbuffersize = { minbuffer: buffersize, num: num })
+    this.minbuffersize = { minbuffer: buffersize, num: num }
   }
 
+  private rotate(arr: number[], phase: number): number[] {
+    const phaseNum = Math.floor(arr.length * phase)
+    return [...arr.slice(phaseNum), ...arr.slice(0, phaseNum)]
+  }
+
+  /**
+   * Gera um período senoidal do parcial.
+   *
+   * @param intensity - amplitude do parcial
+   * @param phase - deslocamento de fase em frações de ciclo (0–1)
+   * @param multiplier - multiplicador de frequência do parcial (harmônico `i+1`)
+   * @returns as amostras de um ciclo
+   */
   createSin(intensity: number, phase: number, multiplier: number): number[] {
     const { minbuffer, num } = this.minbuffersize
     const num_list: number[] = []
@@ -38,6 +87,12 @@ class FundamentalWave {
     return num_list
   }
 
+  /**
+   * Gera um período de onda quadrada, derivando o sinal de uma senoide.
+   *
+   * @returns as amostras de um ciclo
+   * @see {@link createSin} para a semântica dos parâmetros
+   */
   createSquare(intensity: number, phase: number, multiplier: number): number[] {
     const sin = this.createSin(1, phase, multiplier)
     const num_list = sin.map((m) => {
@@ -47,7 +102,13 @@ class FundamentalWave {
     return num_list
   }
 
-  createSawThooth(
+  /**
+   * Gera um período de onda dente de serra.
+   *
+   * @returns as amostras de um ciclo, já deslocadas pela fase
+   * @see {@link createSin} para a semântica dos parâmetros
+   */
+  createSawTooth(
     intensity: number,
     phase: number,
     multiplier: number
@@ -60,12 +121,15 @@ class FundamentalWave {
       const thooth = value * intensity
       num_list.push(thooth)
     }
-    const phaseNum = Math.floor(num_list.length * phase)
-    const sliceA = num_list.slice(0, phaseNum)
-    const sliceB = num_list.slice(phaseNum)
-    return [...sliceB, ...sliceA]
+    return this.rotate(num_list, phase)
   }
 
+  /**
+   * Gera um período de onda triangular.
+   *
+   * @returns as amostras de um ciclo, já deslocadas pela fase
+   * @see {@link createSin} para a semântica dos parâmetros
+   */
   createTriangle(
     intensity: number,
     phase: number,
@@ -79,61 +143,37 @@ class FundamentalWave {
       const thooth = value * intensity
       num_list.push(thooth)
     }
-    const phaseNum = Math.floor(num_list.length * phase)
-    const sliceA = num_list.slice(0, phaseNum)
-    const sliceB = num_list.slice(phaseNum)
-    return [...sliceB, ...sliceA]
+    return this.rotate(num_list, phase)
   }
 
-  createSinContext() {
-    const waveList = this.intensities.map((m, i) => {
-      return this.createSin(m, this.phases[i], i + 1)
+  private buildContext(
+    generator: (intensity: number, phase: number, multiplier: number) => number[]
+  ) {
+    this.wavelist = this.intensities.map((m, i) => {
+      return generator(m, this.phases[i], i + 1)
     })
-    this.wavelist = waveList
   }
 
-  createSquareContext() {
-    const waveList = this.intensities.map((m, i) => {
-      return this.createSquare(m, this.phases[i], i + 1)
-    })
-    this.wavelist = waveList
-  }
-
-  createSawThoothContext() {
-    const waveList = this.intensities.map((m, i) => {
-      return this.createSawThooth(m, this.phases[i], i + 1)
-    })
-    this.wavelist = waveList
-  }
-
-  createTriangleContext() {
-    const waveList = this.intensities.map((m, i) => {
-      return this.createTriangle(m, this.phases[i], i + 1)
-    })
-    this.wavelist = waveList
-  }
-
+  /**
+   * Gera os parciais (`wavelist`) para um tipo de onda, um por amplitude/fase configurada.
+   *
+   * @param typewave - `sin` | `square` | `saw` | `tri`; tipo desconhecido cai em `sin`
+   */
   createContext(typewave: string) {
-    switch (typewave) {
-      case 'sin':
-        this.createSinContext()
-        break
-      case 'square':
-        this.createSquareContext()
-        break
-      case 'saw':
-        this.createSawThoothContext()
-        break
-      case 'tri':
-        this.createTriangleContext()
-        break
-      default:
-        this.createSinContext()
-    }
+    this.buildContext(this.generators[typewave] ?? this.generators.sin)
   }
 
+  /**
+   * Soma todos os parciais já gerados em `wavelist` num único ciclo PCM e
+   * desloca a fase global da onda resultante.
+   *
+   * @param gain - amplitude global aplicada ao somatório (0–1)
+   * @param phase - deslocamento de fase em frações de ciclo (0–1; 0.5 = meio ciclo)
+   * @returns um período da onda; array vazio se nenhum contexto foi gerado
+   * @remarks Requer {@link createContext} antes; sem ele, `wavelist` está vazia.
+   */
   getWave(gain: number, phase: number): number[] {
-    let wave: number[] = []
+    const wave: number[] = []
     if (this.wavelist.length > 0) {
       const harmonic_wave = new Array(this.wavelist[0].length).fill(0)
       for (let i = 0; i < this.wavelist.length; i++) {
@@ -141,12 +181,13 @@ class FundamentalWave {
           harmonic_wave[j] += this.wavelist[i][j]
         }
       }
-      const phaseNum = Math.floor(harmonic_wave.length * phase)
-      const sliceA = harmonic_wave.slice(0, phaseNum)
-      const sliceB = harmonic_wave.slice(phaseNum)
-      wave = [...sliceB, ...sliceA]
+      const len = harmonic_wave.length
+      const phaseNum = Math.floor(len * phase)
+      for (let j = 0; j < len; j++) {
+        wave[j] = harmonic_wave[(j + phaseNum) % len] * gain
+      }
     }
-    return wave.map((m) => m * gain)
+    return wave
   }
 }
 

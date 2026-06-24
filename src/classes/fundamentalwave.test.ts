@@ -51,16 +51,16 @@ describe('FundamentalWave', () => {
   })
 
   // WAVE-AC-04
-  it('WAVE-AC-04: createSawThooth é rampa em [-int,int]; a fase é rotação cíclica (slice em floor(length*phase)) preservando comprimento', () => {
+  it('WAVE-AC-04: createSawTooth é rampa em [-int,int]; a fase é rotação cíclica (slice em floor(length*phase)) preservando comprimento', () => {
     const minbuffer = 50
     const w = makeWave(minbuffer, 1)
     const intensity = 0.8
-    const semFase = w.createSawThooth(intensity, 0, 1)
+    const semFase = w.createSawTooth(intensity, 0, 1)
     expect(semFase).toHaveLength(minbuffer + 1)
     expect(maxAbs(semFase)).toBeLessThanOrEqual(intensity + 1e-9)
     // rotação cíclica: reconstrói o conteúdo deslocado
     const phase = 0.3
-    const comFase = w.createSawThooth(intensity, phase, 1)
+    const comFase = w.createSawTooth(intensity, phase, 1)
     expect(comFase).toHaveLength(semFase.length)
     const k = Math.floor(semFase.length * phase)
     const esperado = [...semFase.slice(k), ...semFase.slice(0, k)]
@@ -117,13 +117,13 @@ describe('FundamentalWave', () => {
     const parcial2 = makeWave(minbuffer, 1).createSin(intensities[1], 0, 2)
     expect(sinW.wavelist[1]).toEqual(parcial2)
 
-    // saw -> cada parcial i iguala createSawThooth(int,0,i+1)
+    // saw -> cada parcial i iguala createSawTooth(int,0,i+1)
     const sawW = makeWave(minbuffer, 1)
     sawW.setIntensities(intensities)
     sawW.setPhases([0, 0])
     sawW.createContext('saw')
     intensities.forEach((m, i) => {
-      const parcial = makeWave(minbuffer, 1).createSawThooth(m, 0, i + 1)
+      const parcial = makeWave(minbuffer, 1).createSawTooth(m, 0, i + 1)
       expect(sawW.wavelist[i]).toEqual(parcial)
     })
 
@@ -212,7 +212,7 @@ describe('FundamentalWave', () => {
           const w = makeWave(minbuffer, 1)
           expect(w.createSin(1, 0, mult)).toHaveLength(minbuffer + 1)
           expect(w.createSquare(1, 0, mult)).toHaveLength(minbuffer + 1)
-          expect(w.createSawThooth(1, 0, mult)).toHaveLength(minbuffer + 1)
+          expect(w.createSawTooth(1, 0, mult)).toHaveLength(minbuffer + 1)
           expect(w.createTriangle(1, 0, mult)).toHaveLength(minbuffer + 1)
         }
       )
@@ -236,7 +236,7 @@ describe('FundamentalWave', () => {
             maxAbs(w.createSquare(intensity, phase, 1))
           ).toBeLessThanOrEqual(lim)
           expect(
-            maxAbs(w.createSawThooth(intensity, phase, 1))
+            maxAbs(w.createSawTooth(intensity, phase, 1))
           ).toBeLessThanOrEqual(lim)
           expect(
             maxAbs(w.createTriangle(intensity, phase, 1))
@@ -274,8 +274,8 @@ describe('FundamentalWave', () => {
         fc.double({ min: 0, max: 1, noNaN: true }),
         (minbuffer, phase) => {
           const w = makeWave(minbuffer, 1)
-          const semFase = w.createSawThooth(1, 0, 1).sort((a, b) => a - b)
-          const comFase = w.createSawThooth(1, phase, 1).sort((a, b) => a - b)
+          const semFase = w.createSawTooth(1, 0, 1).sort((a, b) => a - b)
+          const comFase = w.createSawTooth(1, phase, 1).sort((a, b) => a - b)
           expect(comFase).toEqual(semFase)
         }
       )
