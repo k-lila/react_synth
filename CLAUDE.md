@@ -1,0 +1,100 @@
+# CLAUDE.md
+
+Este arquivo fornece orientações ao Claude Code (claude.ai/code) ao trabalhar com o código deste repositório.
+
+## Restrições de Execução
+
+- Não refatore código fora do escopo explícito da tarefa pedida
+- Não adicione tratamento de erro para cenários impossíveis
+- Não crie arquivos sem ser pedido explicitamente
+- Pergunte antes de agir se a tarefa tiver mais de 3 arquivos envolvidos
+- Antes de cada alteração no código, apresente um relatório que aponte claramente: 1) razões dos novos códigos e/ou das modificações; 2) arquivos a serem criados, se houver; 3) arquivos a serem modificados, se houver
+- Ao criar uma nova branch, pergunte seu nome
+- Decisão arquitetural significativa (stack, padrão transversal, trade-off estrutural) deve virar um ADR em `docs/adr/`. ADRs são imutáveis: para mudar/reverter uma decisão, crie um novo ADR (`Substitui ADR-XXXX`) — não edite o antigo. Atualize o índice em `docs/adr/README.md`.
+- Sempre que elaborar perguntas e fornecer as opções de resposta, sempre dê um panorama simples e resumido sobre a opção em si, com seus prós e contras.
+
+## Visão Geral do Projeto
+
+`harenator` é um sintetizador musical para web (síntese aditiva via séries de Fourier) construído com React 18 + TypeScript + Vite, Redux Toolkit, styled-components, D3 e a Web Audio API nativa.
+
+É um **produto real**, destinado a usuários finais tocando no navegador — priorize UX, robustez e compatibilidade de browser ao decidir trade-offs.
+
+## Comandos
+
+`npm run` + `dev` (Vite em http://localhost:5173) · `build` (`tsc -b && vite build`) ·
+`lint` · `preview` · `test` (`vitest run`) · `test:watch` · `coverage` (v8).
+Descrição de cada script e versões das dependências: **`docs/stacks.md`**.
+
+### Testes
+
+Vitest, configurado em `vite.config.ts` (seção `test`). Escopo testável hoje = **núcleo
+puro** (`classes/`, `utils/`, `store/reducers/`, ambiente `node`); áudio/UI verificados à
+mão. Testes co-located (`*.test.ts`), imports explícitos, **fast-check** na matemática.
+Referência canônica (pirâmide, escopo vivo + roadmap, convenções e exemplos):
+**`docs/testes.md`**.
+
+## Arquitetura e mapa do projeto
+
+Documentação detalhada (diagramas, fluxo de dados completo, tabela de camadas): **`docs/arquitetura.md`**. Stacks com versões e papel de cada dependência: **`docs/stacks.md`**. Pipeline de áudio passo a passo (receita → PCM → `AudioBuffer`, com diagrama das 4 etapas): **`docs/pipeline-audio.md`**. Vínculo posicional entre os PCM e as teclas (visuais + QWERTY): **`docs/keyboard.md`**. Decisões arquiteturais (o *porquê* datado e imutável de cada escolha estrutural; índice): **`docs/adr/README.md`**.
+
+Cerne não óbvio: o áudio é PCM **pré-renderizado em loop**, não streaming quadro a quadro — quando a slice `recipe` muda, `useSynth` re-renderiza toda nota tocável (oitavas 3–4) e tocar uma tecla apenas repete esse buffer. Motivação e trade-offs: **[ADR-0001](docs/adr/0001-pcm-pre-renderizado-em-loop.md)**. Fluxo unidirecional: `recipe` (Redux) → `classes/` (síntese) → `hooks/` (pré-computa PCM + áudio) → `containers/`/`components/` (UI).
+
+### Esquema simplificado
+
+`store/reducers/` (recipe·keyboardkeys) · `classes/` (síntese·escalas·afinação) ·
+`hooks/` (PCM·áudio·input) · `utils/` (plot D3·buffer·helpers) · `components/` (UI folha)
+· `containers/` (layout) · `types/*.d.ts` (tipos globais, sem import). Árvore completa,
+papéis e diagramas: **`docs/arquitetura.md`**.
+
+### Onde mexer
+
+- **Matemática da síntese** (harmônicos, soma de parciais, fase) → `classes/fundamentalwave.ts`. O parcial `i` usa multiplicador de frequência `i+1`; `getWave(gain, phase)` soma os parciais e desloca a fase; `setMinBufferSize` garante ciclos inteiros (loop sem cliques).
+- **Quais notas existem** (escalas `chromatic`/`natural`/`pitagoric`, afinação) → `classes/scalegenerator.ts` + `classes/keyboard.ts`. `useKeyboard` expõe `keyboard[0|1|2][oitava][nota]` (naturais / sustenidos / bemóis).
+- **Como o som se liga à tecla** (vínculo posicional por índice; `id` costura PCM + `pressed` no Redux + keycode QWERTY; ids `10X`/`11X` para bemóis/sustenidos) → `containers/pianokeyboard` + `components/pianokey` (brancas) + `components/blackpianokey` (pretas) + `store/reducers/keyboardkeys.ts`. Detalhes e mapa de índices: **`docs/keyboard.md`**.
+- **O que o som _é_** → slice `recipe` (`store/reducers/recipe.ts`): `pitch`, `gain`, `scale`, `waves[]` (cada wave: `type` `sin`/`square`/`saw`/`tri`, `gain`, `phase`, arrays paralelos `amplitudes[]`/`phases[]`).
+- **Pré-renderização e normalização do PCM** → `hooks/useSynth.ts` (`useMemo`, loop de oitavas `for i = 3; i < 5`, `generateNote`). Saída: `naturalKeys`/`unnaturalKeys` consumidos por `PianoKeyboard`. O caminho completo (receita → tamanho do buffer → síntese → reprodução) está em **`docs/pipeline-audio.md`**.
+- **Reprodução** (play/stop, envelope attack/release por rampa linear) → `hooks/usePlayStop.ts`.
+
+### Stacks (resumo)
+
+React 18 + TypeScript + Vite (SWC) · Redux Toolkit + React-Redux · styled-components · D3 (SVG) · Web Audio API nativa. Tooling: ESLint + Prettier. Testes: Vitest + fast-check (núcleo puro). Detalhes e versões: `docs/stacks.md`.
+
+## Layout e convenções
+
+- Tipos globais ambientes em `src/types/*.d.ts` (`SynthRecipe`, `WaveRecipe`, props — utilizáveis sem import). Papéis das pastas: ver `### Esquema simplificado` acima / `docs/arquitetura.md`.
+- Um componente/container é uma pasta com `index.tsx` + `styles.ts` (styled-components).
+- Estilo de código (`.prettierrc`): sem ponto e vírgula, aspas simples, sem vírgula final. TS é estrito com `noUnusedLocals`/`noUnusedParameters`.
+
+## Convenções de Desenvolvimento
+
+Princípios que guiam *como* escrever código aqui. Consistência com o existente vence
+preferência pessoal; na dúvida, espelhe o arquivo vizinho.
+
+**Componentes**
+- Pequenos e de responsabilidade única; quebre quando crescer.
+- Separe apresentação (`components/`) de orquestração/estado (`containers/`).
+- Arrow const com props desestruturadas; sem `React.FC`.
+- Render puro: sem efeito colateral nem lógica pesada no corpo do JSX.
+
+**Tipos**
+- Domínio e props em `types/*.d.ts` (ambient, sem import); reuse antes de criar novo.
+- Nunca `any`; derive tipos (`keyof`, `ReturnType`, unions discriminadas) em vez de duplicar.
+
+**Hooks e lógica**
+- Lógica reutilizável ou com estado → custom hook (`useX`, retorna objeto).
+- Respeite as regras dos hooks; declare as dependências reais de efeitos/memo.
+- Memoize só com custo medido (ex.: PCM em `useSynth`), não por reflexo.
+
+**Estado**
+- Local por padrão; só o que é compartilhado vai ao Redux.
+- Mutações via `createSlice`; trate o estado como imutável fora do reducer.
+- Preserve o fluxo unidirecional `recipe → classes → hooks → UI`.
+
+**Estilo**
+- styled-components por componente, exportado como `XStyled`; props transientes com `$`.
+- Classes utilitárias globais com prefixo `--`.
+
+**Geral**
+- Reuse/estenda antes de criar (DRY); não abstraia sem segundo uso (YAGNI).
+- Nomes descritivos em português; clareza acima de esperteza.
+- Mudança mínima e local ao escopo; evite refator oportunista.
