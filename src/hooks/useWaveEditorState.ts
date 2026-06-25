@@ -8,6 +8,15 @@ import {
   setWavePhase
 } from '../store/reducers/recipe'
 
+/**
+ * Estado local do editor de uma onda, sincronizado com o Redux a cada mudança.
+ *
+ * @param id - índice da onda em `recipe.waves`
+ * @returns `gain`/`phase` editáveis (com seus setters), `selected`, `setSelected`
+ *   e a `wave` atual
+ * @remarks `selected` alterna o alvo da edição: `-1` edita o gain/phase **global**
+ *   da onda; `>= 0` edita o parcial daquele índice em `amplitudes`/`phases`.
+ */
 function useWaveEditorState(id: number) {
   const dispatch = useDispatch()
   const wave = useSelector((state: RootReducer) => state.recipe).waves[id]

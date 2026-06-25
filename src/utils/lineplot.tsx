@@ -1,5 +1,15 @@
 import * as d3 from 'd3'
 
+/**
+ * Renderiza, via D3, um SVG com uma ou mais séries sobre um eixo Y fixo `[-1, 1]`.
+ *
+ * @param data - séries a plotar (`number[][]`), todas do mesmo comprimento e
+ *   assumidas normalizadas em ±1
+ * @param id - índice da série a destacar com traço grosso; `-1` destaca a última
+ * @returns o elemento SVG do gráfico
+ * @remarks Eixo X vai de 0 a `data[0].length - 1`; a linha horizontal central
+ *   marca o zero. Use {@link waveEditorPlot} quando não houver série a destacar.
+ */
 export default function LinePlot(
   data: number[][],
   width: number,

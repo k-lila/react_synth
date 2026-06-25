@@ -10,15 +10,32 @@ type KeyboardScales = {
   pitagoric: number[][]
 }
 
+/**
+ * Converte as razões adimensionais de {@link ScaleGenerator} em **frequências
+ * audíveis em Hz**, replicando cada escala por todas as oitavas tocáveis.
+ *
+ * @remarks Deriva um C de referência a partir do `pitch` e o varre de ~20 Hz a
+ *   5000 Hz, multiplicando as razões de cada escala por oitava. O resultado em
+ *   `keyboard` indexa-se como `[escala][oitava][nota]`.
+ */
 class Keyboard extends ScaleGenerator {
   pitch: number
   keyboard: KeyboardScales
+  /**
+   * @param pitch - frequência de referência em Hz usada para ancorar o C base
+   */
   constructor(pitch: number) {
     super()
     this.pitch = pitch
     this.keyboard = this.getKeyboard()
   }
 
+  /**
+   * Monta todas as escalas em Hz, oitava a oitava.
+   *
+   * @returns cada escala (`chromatic`, `natural`, `pitagoric`, etc.) como
+   *   `number[][]` no formato `[oitava][nota]`, cobrindo a faixa ~20–5000 Hz
+   */
   getKeyboard(): KeyboardScales {
     const _chromatic: number[][] = []
     const _chromaticnatural: number[][] = []

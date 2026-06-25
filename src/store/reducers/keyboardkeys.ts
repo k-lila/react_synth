@@ -10,6 +10,8 @@ type KeyboardQWERTY = {
   naturalkeys: Array<Key>
   flatkeys: Array<Key>
   sharpkeys: Array<Key>
+  // ids das teclas atualmente tocando; vazio ⇒ silêncio
+  playing: number[]
 }
 
 const initialState: KeyboardQWERTY = {
@@ -52,7 +54,8 @@ const initialState: KeyboardQWERTY = {
     { id: 118, keycode: 'KeyP', pressed: false },
     { id: 119, keycode: 'BracketLeft', pressed: false },
     { id: 1110, keycode: 'BracketRight', pressed: false }
-  ]
+  ],
+  playing: []
 }
 
 const KeyboardQWERTYSlice = createSlice({
@@ -105,6 +108,12 @@ const KeyboardQWERTYSlice = createSlice({
           ? { ...key, pressed: action.payload.pressed }
           : key
       )
+    },
+    addPlayingKey: (state, action: PayloadAction<{ keyid: number }>) => {
+      state.playing.push(action.payload.keyid)
+    },
+    removePlayingKey: (state, action: PayloadAction<{ keyid: number }>) => {
+      state.playing = state.playing.filter((id) => id !== action.payload.keyid)
     }
   }
 })
@@ -113,6 +122,8 @@ export const {
   setKeyByCode,
   setKeyById,
   setChromaticKeyById,
-  setNaturalKeyById
+  setNaturalKeyById,
+  addPlayingKey,
+  removePlayingKey
 } = KeyboardQWERTYSlice.actions
 export default KeyboardQWERTYSlice.reducer

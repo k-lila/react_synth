@@ -3,6 +3,13 @@ import FundamentalWave from '../classes/fundamentalwave'
 import { RootReducer } from '../store'
 import { useMemo } from 'react'
 
+/**
+ * Gera o PCM da soma de todas as ondas da receita para visualização (não áudio).
+ *
+ * @returns um período da onda resultante, normalizado e multiplicado por
+ *   `recipe.gain`; array de zeros quando o sinal é plano
+ * @remarks Usa sample rate fixo de 1000 (resolução de tela, não de áudio).
+ */
 function useMainWaveView() {
   const recipe = useSelector((state: RootReducer) => state.recipe)
   const visualization = useMemo(() => {
@@ -22,7 +29,13 @@ function useMainWaveView() {
       }
       result.push(_num)
     }
-    const diff = (Math.max(...result) - Math.min(...result)) / 2
+    let max = result[0]
+    let min = result[0]
+    for (let k = 1; k < result.length; k++) {
+      if (result[k] > max) max = result[k]
+      if (result[k] < min) min = result[k]
+    }
+    const diff = (max - min) / 2
     const final = result.map((m) => {
       if (diff == 0) {
         return 0
