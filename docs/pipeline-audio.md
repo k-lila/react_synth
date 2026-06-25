@@ -10,8 +10,7 @@ compilada **uma vez** num `PeriodicWave` (espectro de Fourier — parciais arbit
 com fases independentes); esse timbre **independe da nota**. Tocar uma tecla apenas cria
 um `OscillatorNode` leve e descartável, configura-o com o `PeriodicWave` e varia a
 frequência. Tudo recompila o timbre quando `recipe.waves` muda. Motivação e trade-offs
-dessa escolha: **[ADR-0003](adr/0003-sintese-por-oscilador-nativo.md)** (substitui o
-[ADR-0001](adr/0001-pcm-pre-renderizado-em-loop.md), que usava PCM pré-renderizado).
+dessa escolha: **[ADR-0001](adr/0001-sintese-por-oscilador-nativo.md)**.
 
 ```
 PONTO 0 ─ RECEITA (Redux: store/reducers/recipe.ts)
@@ -90,7 +89,7 @@ dispara `play(frequency, id)` / `stop(id)`.
 
 > Mudar `recipe.waves` (timbre) ou `recipe.gain` (volume) **altera a nota já soando**:
 > `useHareSynth` propaga o `PeriodicWave` recompilado / o novo ganho às vozes ativas
-> (modulação ao vivo — **[ADR-0004](adr/0004-modulacao-ao-vivo.md)**). E o `AudioContext` pode
+> (modulação ao vivo — **[ADR-0003](adr/0003-modulacao-ao-vivo.md)**). E o `AudioContext` pode
 > nascer `suspended` (autoplay policy), retomando no primeiro gesto do usuário.
 
 O fluxo é unidirecional: **`recipe` (Redux) → `classes/` (síntese) → `hooks/`

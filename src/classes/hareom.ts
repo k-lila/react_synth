@@ -10,7 +10,7 @@
  *   Fluxo: configure com {@link setRecipe}, obtenha o núcleo puro com
  *   {@link toCoefficients} (testável sem Web Audio) ou o objeto nativo com
  *   {@link toPeriodicWave}.
- * @see ADR-0003 — síntese por oscilador nativo (substitui o ADR-0001); esta classe
+ * @see ADR-0001 — síntese por oscilador nativo; esta classe
  *   é o compilador de timbre **em produção**, consumido por {@link useHareSynth}.
  * @see {@link HareSom} — toca o `PeriodicWave` que esta classe compila.
  */

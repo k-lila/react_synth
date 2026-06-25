@@ -11,7 +11,7 @@
  *
  *   Classe pura de Web Audio: não conhece Redux nem o estado `keyboardkeys.playing` — essa
  *   fiação pertence a um hook que consuma esta classe (ver {@link useHareSynth}).
- * @see ADR-0003 — síntese por oscilador nativo (substitui o ADR-0001)
+ * @see ADR-0001 — síntese por oscilador nativo
  * @see {@link HareOm} — compila o {@link WaveRecipe} no `PeriodicWave` que esta classe toca.
  */
 class HareSom {

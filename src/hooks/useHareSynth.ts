@@ -17,19 +17,19 @@ const MAX_HARMONICS = 2048
  * @returns `audioCtx` próprio do motor e `play(frequency, keyid)` / `stop(keyid)`:
  *   `play` dispara a nota `frequency` (Hz) e marca `keyid` em `keyboardkeys.playing`;
  *   `stop` solta e descarta a voz daquele `keyid`. `play` ignora um `keyid` já tocando.
- * @remarks **Motor de áudio do app** (ADR-0003): o timbre (`PeriodicWave`) é recompilado só
+ * @remarks **Motor de áudio do app** (ADR-0001): o timbre (`PeriodicWave`) é recompilado só
  *   quando `recipe.waves` muda (`useMemo`) — os `waves[]` são **somados** num só espectro
  *   (cada um compilado por um {@link HareOm}; agregar `waves[]` é justamente o que o `HareOm`
  *   deixou para o orquestrador). Cada tecla pressionada instancia uma voz monofônica
  *   {@link HareSom}, descartada no `stop`; **polifonia = uma `HareSom` por `keyid`**. Reflete
  *   o efeito em `keyboardkeys.playing`. Mudanças de `recipe.waves` (timbre) e `recipe.gain`
- *   (volume) são **propagadas às vozes já soando** (modulação ao vivo, ver ADR-0004): o novo
+ *   (volume) são **propagadas às vozes já soando** (modulação ao vivo, ver ADR-0003): o novo
  *   `PeriodicWave`/ganho entra na nota em andamento, não só no próximo `play`.
  *
  *   Dono do único `AudioContext`, instanciado uma vez no `PianoKeyboard` e com `play`/`stop`
  *   distribuídos a todas as teclas (brancas e pretas). As frequências de cada tecla vêm do
  *   {@link useKeyboardLayout}.
- * @see ADR-0003 — síntese por oscilador nativo (substitui o ADR-0001)
+ * @see ADR-0001 — síntese por oscilador nativo
  * @see {@link HareOm} — timbre · {@link HareSom} — reprodução
  */
 function useHareSynth() {

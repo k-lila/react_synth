@@ -24,7 +24,6 @@ Cada ADR segue o formato Nygard: **Status · Contexto · Decisão · Consequênc
 
 | ADR | Título | Status |
 |-----|--------|--------|
-| [0001](0001-pcm-pre-renderizado-em-loop.md) | PCM pré-renderizado em loop por nota, não streaming quadro a quadro | Substituído por ADR-0003 |
+| [0001](0001-sintese-por-oscilador-nativo.md) | Síntese por oscilador nativo (`PeriodicWave`) | Aceito |
 | [0002](0002-padrao-tsdoc.md) | Padrão de TSDoc para a API pública do núcleo | Aceito |
-| [0003](0003-sintese-por-oscilador-nativo.md) | Síntese por oscilador nativo (`PeriodicWave`), não PCM pré-renderizado | Aceito |
-| [0004](0004-modulacao-ao-vivo.md) | Modulação de timbre e volume ao vivo (propagação às vozes soando) | Aceito |
+| [0003](0003-modulacao-ao-vivo.md) | Modulação de timbre e volume ao vivo (propagação às vozes soando) | Aceito |

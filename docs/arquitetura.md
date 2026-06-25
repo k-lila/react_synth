@@ -7,7 +7,7 @@ O ponto central não óbvio: o áudio **não** é transmitido quadro a quadro ne
 em PCM — quando a `recipe` muda, `useHareSynth` compila o timbre uma vez num `PeriodicWave`
 (independente da nota), e tocar uma tecla apenas dispara um `OscillatorNode` leve nessa
 frequência. Motivação e trade-offs dessa escolha:
-**[ADR-0003](adr/0003-sintese-por-oscilador-nativo.md)** (substitui o ADR-0001).
+**[ADR-0001](adr/0001-sintese-por-oscilador-nativo.md)**.
 
 ## 1. Esquema de arquivos e diretórios
 

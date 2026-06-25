@@ -37,7 +37,7 @@ Referência canônica (pirâmide, escopo vivo + roadmap, convenções e exemplos
 
 Documentação detalhada (diagramas, fluxo de dados completo, tabela de camadas): **`docs/arquitetura.md`**. Stacks com versões e papel de cada dependência: **`docs/stacks.md`**. Pipeline de áudio passo a passo (receita → `PeriodicWave` → `OscillatorNode`, com diagrama das etapas): **`docs/pipeline-audio.md`**. Vínculo posicional entre as frequências e as teclas (visuais + QWERTY): **`docs/keyboard.md`**. Decisões arquiteturais (o *porquê* datado e imutável de cada escolha estrutural; índice): **`docs/adr/README.md`**.
 
-Cerne não óbvio: o áudio usa o **oscilador nativo** (`OscillatorNode` + `PeriodicWave`), não PCM nem streaming quadro a quadro — quando a slice `recipe` muda, `useHareSynth` compila o timbre uma vez num `PeriodicWave` (independente da nota) e tocar uma tecla apenas dispara um oscilador leve nessa frequência. Motivação e trade-offs: **[ADR-0003](docs/adr/0003-sintese-por-oscilador-nativo.md)** (substitui o ADR-0001). Fluxo unidirecional: `recipe` (Redux) → `classes/` (síntese) → `hooks/` (compila timbre + áudio) → `containers/`/`components/` (UI).
+Cerne não óbvio: o áudio usa o **oscilador nativo** (`OscillatorNode` + `PeriodicWave`), não PCM nem streaming quadro a quadro — quando a slice `recipe` muda, `useHareSynth` compila o timbre uma vez num `PeriodicWave` (independente da nota) e tocar uma tecla apenas dispara um oscilador leve nessa frequência. Motivação e trade-offs: **[ADR-0001](docs/adr/0001-sintese-por-oscilador-nativo.md)**. Fluxo unidirecional: `recipe` (Redux) → `classes/` (síntese) → `hooks/` (compila timbre + áudio) → `containers/`/`components/` (UI).
 
 ### Esquema simplificado
 

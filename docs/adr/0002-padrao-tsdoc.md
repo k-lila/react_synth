@@ -8,7 +8,7 @@ Aceito
 
 O `harenator` documenta arquitetura em camadas: `CLAUDE.md` e `docs/*.md` descrevem
 *o que é hoje*, e os ADRs registram o *porquê* datado. Falta, porém, documentação no
-**ponto de uso**: quem dá hover em `FundamentalWave.getWave` ou em `useSynth` no editor
+**ponto de uso**: quem dá hover em `HareOm.toCoefficients` ou em `useHareSynth` no editor
 não vê nada — o contrato (unidades, faixas, invariantes, pré-condições) vive apenas na
 prosa externa ou na cabeça de quem escreveu.
 
@@ -17,8 +17,9 @@ Forças em jogo:
 - O TypeScript já expressa **tipos** (assinaturas, formatos). Comentar o tipo de novo é
   ruído; o que falta é o **não-óbvio**: unidade de um `number`, faixa válida, invariante,
   ordem de chamada, efeito colateral.
-- A matemática de síntese (`classes/`) e a pré-renderização (`hooks/`) têm contratos
-  sutis (ex.: `getWave` exige `createContext` antes; `phase` é fração de ciclo, não rad).
+- A matemática de síntese (`classes/`) e a orquestração de áudio (`hooks/`) têm contratos
+  sutis (ex.: `phase` é fração de ciclo, não radiano; `play` é ignorado se já houver nota
+  ativa; o `PeriodicWave` normaliza o pico para ~1).
 - Sem uma convenção única, cada arquivo comentaria de um jeito — o oposto do princípio
   "consistência com o existente vence preferência pessoal".
 - Excesso de docstring (em `private`, helpers triviais) envelhece e mente; é pior que a
@@ -44,19 +45,18 @@ ou invariante** que o tipo não carrega. Se não há o que acrescentar, **omita*
 **Estilo:** em português, sem ponto e vírgula, espelhando o `.prettierrc` e a convenção
 "nomes descritivos em português; clareza acima de esperteza".
 
-Exemplo canônico (`FundamentalWave.getWave`):
+Exemplo canônico (`HareOm.toCoefficients`):
 
 ```ts
 /**
- * Soma todos os parciais já gerados em `wavelist` num único ciclo PCM e
- * desloca a fase global da onda resultante.
+ * Compila o recipe nos coeficientes de Fourier do `PeriodicWave`.
  *
- * @param gain - amplitude global aplicada ao somatório (0–1)
- * @param phase - deslocamento de fase em frações de ciclo (0–1; 0.5 = meio ciclo)
- * @returns um período da onda; array vazio se nenhum contexto foi gerado
- * @remarks Requer `createContext()` antes; a soma é destrutiva sobre os parciais.
+ * @returns `real` (cossenos) e `imag` (senos), ambos com `maxHarmonics + 1` posições;
+ *   índice 0 é o DC (sempre 0) e o índice `n` é o harmônico `n` da fundamental
+ * @remarks Núcleo puro, sem Web Audio. Convenção: uma componente
+ *   `A·sin(2π n t + θ)` entra como `real[n] += A·sin θ` e `imag[n] += A·cos θ`.
  */
-getWave(gain: number, phase: number): number[] {
+toCoefficients(): { real: Float32Array; imag: Float32Array } {
 ```
 
 ## Consequências
@@ -74,8 +74,7 @@ getWave(gain: number, phase: number): number[] {
 
 - Docstring é código que envelhece: precisa ser mantida junto com a assinatura, ou mente.
   Mitigado por restringi-la à API pública e ao não-óbvio.
-- Aplicar o padrão ao núcleo existente é trabalho incremental, arquivo a arquivo —
-  `classes/fundamentalwave.ts` é o piloto.
+- Aplicar e manter o padrão no núcleo é trabalho incremental, arquivo a arquivo.
 
 ## Alternativas consideradas
 

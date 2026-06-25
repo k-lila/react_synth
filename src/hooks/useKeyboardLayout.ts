@@ -17,7 +17,7 @@ type KeyboardLayout = {
  * @remarks Diz apenas **quais** notas existem (escala/oitavas), independente da rota de
  *   síntese — o som em si é responsabilidade do {@link useHareSynth}. Extraído do antigo
  *   `useSynth` ao migrar do PCM pré-renderizado para o oscilador nativo.
- * @see ADR-0003 — síntese por oscilador nativo (substitui o ADR-0001)
+ * @see ADR-0001 — síntese por oscilador nativo
  */
 function useKeyboardLayout(): KeyboardLayout {
   const scale = useSelector((state: RootReducer) => state.recipe.scale)
