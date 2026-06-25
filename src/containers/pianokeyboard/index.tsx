@@ -5,11 +5,13 @@ import useKeyboardQWERTY from '../../hooks/useKeyboardQWERTY'
 import useWindowSize from '../../hooks/useWindowsSize'
 import { KeyboardContainer, PianoKeyboardStyled } from './styles'
 import useInfoBtn from '../../hooks/useInfoBtn'
+import useHareSynth from '../../hooks/useHareSynth'
 
 const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
   const { windowsize } = useWindowSize()
   const { info, changeInfo } = useInfoBtn()
   useKeyboardQWERTY()
+  const { play, stop } = useHareSynth()
 
   const keyboardSize =
     windowsize.width < 600 ? 5 : windowsize.width >= 1024 ? 12 : 8
@@ -20,9 +22,9 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
         key={i}
         id={i}
         frequency={props.naturalfrequencies[i]}
-        wavedata={props.naturalkeys[i]}
-        audioctx={props.audioctx}
         infonum={info}
+        play={play}
+        stop={stop}
       />
     )
   }
@@ -38,20 +40,20 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
                     key={`10${i - 1}`}
                     id={Number(`10${i - 1}`)}
                     frequency={props.unnaturalfrequencies[i][0]}
-                    wavedata={props.unnaturalkeys[i][0]}
-                    audioctx={props.audioctx}
                     natural
                     flat
                     infonum={info}
+                    play={play}
+                    stop={stop}
                   />
                   <PianoBlackKey
                     key={`11${i - 1}`}
                     id={Number(`11${i - 1}`)}
                     frequency={props.unnaturalfrequencies[i - 1][1]}
-                    wavedata={props.unnaturalkeys[i - 1][1]}
-                    audioctx={props.audioctx}
                     natural
                     infonum={info}
+                    play={play}
+                    stop={stop}
                   />
                 </div>
               )
@@ -71,9 +73,9 @@ const PianoKeyboard = ({ ...props }: PianoKeyboardProps) => {
                     key={`11${i - 1}`}
                     id={Number(`11${i - 1}`)}
                     frequency={props.unnaturalfrequencies[_i][0]}
-                    wavedata={props.unnaturalkeys[_i][0]}
-                    audioctx={props.audioctx}
                     infonum={info}
+                    play={play}
+                    stop={stop}
                   />
                 )
               }

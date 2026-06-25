@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux'
-import usePlayStop from '../../hooks/usePlayStop'
 import { PianoKeyStyled } from './styles'
 import { RootReducer } from '../../store'
 import { useEffect } from 'react'
@@ -8,7 +7,6 @@ import getKeyboardKey from '../../utils/getkeyboardkey'
 
 const PianoKey = ({ ...props }: PianoKeyProps) => {
   const dispatch = useDispatch()
-  const { play, stop } = usePlayStop(props.wavedata, props.audioctx)
   const keyboardkey = useSelector((state: RootReducer) => state.keyboardkeys)
     .naturalkeys[props.id]
 
@@ -26,11 +24,11 @@ const PianoKey = ({ ...props }: PianoKeyProps) => {
 
   useEffect(() => {
     if (keyboardkey.pressed) {
-      play()
+      props.play(props.frequency, props.id)
     } else {
-      stop()
+      props.stop(props.id)
     }
-  }, [keyboardkey.pressed, play, stop, keyboardkey])
+  }, [keyboardkey.pressed, props, keyboardkey])
 
   return (
     <PianoKeyStyled>

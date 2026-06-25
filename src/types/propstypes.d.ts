@@ -2,25 +2,21 @@ declare type PianoKeyProps = {
   id: number
   /** Frequência da nota, em Hz */
   frequency: number
-  /** PCM de um período, normalizado em ±1 */
-  wavedata: number[]
-  audioctx: AudioContext
   natural?: boolean
   flat?: boolean
   /** Modo de exibição de informação na tecla (ver `useInfoBtn`, 0–3) */
   infonum: number
+  /** Dispara a nota `frequency` (Hz) marcando `keyid` em `keyboardkeys.playing`. */
+  play: (frequency: number, keyid: number) => void
+  /** Solta e descarta a voz do `keyid`. */
+  stop: (keyid: number) => void
 }
 
 declare type PianoKeyboardProps = {
   scale: string
-  audioctx: AudioContext
-  /** PCM das notas naturais; paralelo por índice a `naturalfrequencies` */
-  naturalkeys: number[][]
-  /** PCM das notas acidentais; paralelo por índice a `unnaturalfrequencies` */
-  unnaturalkeys: number[][][]
-  /** Frequências (Hz) das notas naturais; paralelo a `naturalkeys` */
+  /** Frequências (Hz) das notas naturais */
   naturalfrequencies: number[]
-  /** Frequências (Hz) das notas acidentais; paralelo a `unnaturalkeys` */
+  /** Frequências (Hz) das notas acidentais; uma lista por posição natural */
   unnaturalfrequencies: number[][]
 }
 

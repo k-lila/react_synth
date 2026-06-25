@@ -6,12 +6,10 @@ import {
   setNaturalKeyById
 } from '../../store/reducers/keyboardkeys'
 import { useEffect } from 'react'
-import usePlayStop from '../../hooks/usePlayStop'
 import getKeyboardKey from '../../utils/getkeyboardkey'
 
 const PianoBlackKey = ({ ...props }: PianoKeyProps) => {
   const dispatch = useDispatch()
-  const { play, stop } = usePlayStop(props.wavedata, props.audioctx)
 
   const keyboardkey = useSelector((state: RootReducer) =>
     props.natural && props.flat
@@ -50,11 +48,11 @@ const PianoBlackKey = ({ ...props }: PianoKeyProps) => {
 
   useEffect(() => {
     if (keyboardkey?.pressed) {
-      play()
+      props.play(props.frequency, props.id)
     } else {
-      stop()
+      props.stop(props.id)
     }
-  }, [keyboardkey?.pressed, play, stop, keyboardkey])
+  }, [keyboardkey?.pressed, props, keyboardkey])
 
   return (
     <PianoBlackKeyStyled $natural={props.natural ? props.natural : false}>

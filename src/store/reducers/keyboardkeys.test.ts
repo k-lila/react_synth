@@ -4,7 +4,9 @@ import reducer, {
   setKeyByCode,
   setKeyById,
   setChromaticKeyById,
-  setNaturalKeyById
+  setNaturalKeyById,
+  addPlayingKey,
+  removePlayingKey
 } from './keyboardkeys'
 
 const init = () => reducer(undefined, { type: '@@INIT' })
@@ -92,6 +94,72 @@ describe('keyboardkeys reducer', () => {
       ...s0.sharpkeys
     ].every((k) => k.pressed === false)
     expect(todasFalse).toBe(true)
+  })
+
+  // KEYS-AC-06
+  it('KEYS-AC-06: playing inicia em []; addPlayingKey insere e removePlayingKey remove ids sem tocar nas listas de teclas', () => {
+    const s0 = init()
+    expect(s0.playing).toEqual([])
+
+    const um = reducer(s0, addPlayingKey({ keyid: 5 }))
+    expect(um.playing).toEqual([5])
+    const dois = reducer(um, addPlayingKey({ keyid: 110 }))
+    expect(dois.playing).toEqual([5, 110])
+
+    const volta = reducer(dois, removePlayingKey({ keyid: 5 }))
+    expect(volta.playing).toEqual([110])
+
+    // nenhuma das três listas de teclas é alterada
+    expect(dois.naturalkeys).toEqual(s0.naturalkeys)
+    expect(dois.flatkeys).toEqual(s0.flatkeys)
+    expect(dois.sharpkeys).toEqual(s0.sharpkeys)
+  })
+
+  // KEYS-AC-06 (complemento)
+  it('KEYS-AC-06: removePlayingKey de um id inexistente é no-op (lista intacta)', () => {
+    const s0 = init()
+    const comAlgumas = reducer(
+      reducer(s0, addPlayingKey({ keyid: 5 })),
+      addPlayingKey({ keyid: 110 })
+    )
+    const semMudanca = reducer(comAlgumas, removePlayingKey({ keyid: 999 }))
+    expect(semMudanca.playing).toEqual([5, 110])
+    expect(semMudanca).toEqual(comAlgumas)
+  })
+
+  // KEYS-AC-06 (complemento)
+  it('KEYS-AC-06: soltar uma tecla entre 3+ simultâneas preserva as demais (não corta o resto)', () => {
+    const s0 = init()
+    const tres = [5, 110, 7].reduce(
+      (st, id) => reducer(st, addPlayingKey({ keyid: id })),
+      s0
+    )
+    expect(tres.playing).toEqual([5, 110, 7])
+
+    // solta a do meio
+    const soltaMeio = reducer(tres, removePlayingKey({ keyid: 110 }))
+    expect(soltaMeio.playing).toEqual([5, 7])
+
+    // solta a primeira das duas restantes
+    const soltaPrimeira = reducer(soltaMeio, removePlayingKey({ keyid: 5 }))
+    expect(soltaPrimeira.playing).toEqual([7])
+
+    // a última continua tocando
+    expect(soltaPrimeira.playing).toHaveLength(1)
+    expect(soltaPrimeira.playing).toContain(7)
+  })
+
+  // KEYS-AC-07
+  it('KEYS-AC-07: id 0 conta como tecla tocando (silêncio é por length, não por valor)', () => {
+    const s0 = init()
+
+    const com0 = reducer(s0, addPlayingKey({ keyid: 0 }))
+    expect(com0.playing).toEqual([0])
+    expect(com0.playing.length).toBe(1)
+
+    const sem0 = reducer(com0, removePlayingKey({ keyid: 0 }))
+    expect(sem0.playing).toEqual([])
+    expect(sem0.playing.length).toBe(0)
   })
 
   // Propriedade: cardinalidade preservada após qualquer ação

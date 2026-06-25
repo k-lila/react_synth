@@ -1,27 +1,20 @@
 import SynthWave from '../synthwave'
-import useSynth from '../../hooks/useSynth'
 import PianoKeyboard from '../pianokeyboard'
 import WaveEditor from '../waveeditor'
 import { HarenatorStyled } from './styles'
+import { useSelector } from 'react-redux'
+import { RootReducer } from '../../store'
+import useKeyboardLayout from '../../hooks/useKeyboardLayout'
 
 const Harenator = () => {
-  const {
-    recipe,
-    audioCtx,
-    naturalKeys,
-    unnaturalKeys,
-    naturalFrequencies,
-    unnaturalFrequencies
-  } = useSynth()
+  const scale = useSelector((state: RootReducer) => state.recipe.scale)
+  const { naturalFrequencies, unnaturalFrequencies } = useKeyboardLayout()
   return (
     <HarenatorStyled>
       <SynthWave />
       <WaveEditor />
       <PianoKeyboard
-        scale={recipe.scale}
-        audioctx={audioCtx}
-        naturalkeys={naturalKeys}
-        unnaturalkeys={unnaturalKeys}
+        scale={scale}
         naturalfrequencies={naturalFrequencies}
         unnaturalfrequencies={unnaturalFrequencies}
       />
