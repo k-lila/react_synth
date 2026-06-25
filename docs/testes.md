@@ -44,20 +44,23 @@ infra para sustentá-las sem flakiness.
 
 | Área | Pasta | Cobertura atual |
 |------|-------|-----------------|
-| Síntese / afinação | `src/classes/` | `fundamentalwave.test.ts` · `scalegenerator.test.ts` · `keyboard.test.ts` |
-| Helpers | `src/utils/` | `minbuffersize.test.ts` · `getkeyboardkey.test.ts` · `getpercent.test.ts` |
+| Timbre / síntese / afinação | `src/classes/` | `hareom.test.ts` · `fundamentalwave.test.ts` · `scalegenerator.test.ts` · `keyboard.test.ts` |
+| Helpers | `src/utils/` | `getkeyboardkey.test.ts` · `getpercent.test.ts` |
 | Estado (reducers) | `src/store/reducers/` | `recipe.test.ts` · `keyboardkeys.test.ts` |
 
 **Pendente — `⚠️ não verificável` por automação** (validação manual no app por enquanto):
 
-- Hooks de áudio `useSynth` / `usePlayStop` — dependem de um **stub de Web Audio** que ainda
-  não existe. Não tente testá-los; marque o comportamento como `⚠️ não verificável`.
+- Reprodução `HareSom` e o hook `useHareSynth` — tocam via `OscillatorNode`/`GainNode` reais;
+  dependem de um **stub de Web Audio** que ainda não existe. Não tente testá-los; marque o
+  comportamento como `⚠️ não verificável`. (O timbre puro, `HareOm.toCoefficients`, **é**
+  testável sem Web Audio e já tem cobertura.)
 - Componentes/containers (UI) — sem ambiente jsdom + Testing Library configurado ainda.
 
 **Roadmap:**
 
-1. Introduzir um **stub de Web Audio** (`AudioContext`/`AudioBuffer`/`GainNode`) → destrava a
-   camada de **integração** para `useSynth`/`usePlayStop` (pré-render do PCM, envelope).
+1. Introduzir um **stub de Web Audio** (`AudioContext`/`OscillatorNode`/`PeriodicWave`/
+   `GainNode`) → destrava a camada de **integração** para `HareSom`/`useHareSynth`
+   (oscilador, envelope, pool de vozes).
 2. Habilitar **jsdom + Testing Library** → camada de **componente** para a UI folha.
 3. E2E permanece fora de escopo até haver necessidade real.
 
@@ -66,8 +69,8 @@ Quando um item do roadmap for concluído, mova-o para a tabela de "testável hoj
 
 ## 3. Convenções de implementação
 
-- **Co-location:** o teste fica ao lado do fonte — `src/utils/minbuffersize.test.ts` para
-  `src/utils/minbuffersize.ts`. Sufixo `.test.ts`.
+- **Co-location:** o teste fica ao lado do fonte — `src/classes/hareom.test.ts` para
+  `src/classes/hareom.ts`. Sufixo `.test.ts`.
 - **Imports explícitos** (sem globals; `globals: false`): `import { describe, it, expect } from 'vitest'`
   e `import fc from 'fast-check'`.
 - **AAA** (Arrange · Act · Assert): monte o cenário, execute a unidade, verifique. Uma razão de
@@ -91,27 +94,44 @@ Quando um item do roadmap for concluído, mova-o para a tabela de "testável hoj
 A regra prática para o núcleo: **um exemplo concreto** (caso âncora legível) **+ uma
 propriedade** (invariante sobre entradas geradas) onde a matemática justificar.
 
-**Exemplo + propriedade** — `src/utils/minbuffersize.test.ts` (referência canônica):
+**Exemplo + propriedade** — `src/classes/hareom.test.ts` (referência canônica):
 
 ```ts
 import { describe, it, expect } from 'vitest'
 import fc from 'fast-check'
-import minBufferSize from './minbuffersize'
+import HareOm from './hareom'
 
-describe('minBufferSize', () => {
-  it('quando o período é inteiro, fecha em 1 ciclo exato', () => {
-    expect(minBufferSize(48000, 480)).toEqual({ buffersize: 100, num: 1 })
+// magnitude do harmônico n: sqrt(real^2 + imag^2)
+const mag = (c: { real: Float32Array; imag: Float32Array }, n: number) =>
+  Math.hypot(c.real[n], c.imag[n])
+
+describe('HareOm', () => {
+  it('HAREOM-AC-03: square tem só harmônicos ímpares (pares ~0) decaindo ~1/k', () => {
+    const c = new HareOm(
+      { type: 'square', gain: 1, phase: 0, amplitudes: [1], phases: [0] },
+      16
+    ).toCoefficients()
+    for (let n = 2; n <= 16; n += 2) expect(mag(c, n)).toBeCloseTo(0, 12)
+    expect(mag(c, 1) / mag(c, 3)).toBeCloseTo(3, 6) // 1/k → razão ~3
   })
 
-  it('invariante: o buffer cobre `num` ciclos quase inteiros (loop sem clique)', () => {
+  it('HAREOM-AC-10: variar a fase preserva a magnitude de cada harmônico', () => {
     fc.assert(
       fc.property(
-        fc.integer({ min: 8000, max: 192000 }),
-        fc.integer({ min: 20, max: 5000 }),
-        (samplerate, pitch) => {
-          const { buffersize, num } = minBufferSize(samplerate, pitch)
-          const periodo = samplerate / pitch
-          expect(Math.abs(buffersize - periodo * num)).toBeLessThanOrEqual(0.5)
+        fc.constantFrom('sin', 'square', 'saw', 'tri'),
+        fc.double({ min: 0, max: 1, noNaN: true }),
+        (type, phase) => {
+          const base = new HareOm(
+            { type, gain: 1, phase: 0, amplitudes: [1], phases: [0] },
+            32
+          ).toCoefficients()
+          const shifted = new HareOm(
+            { type, gain: 1, phase, amplitudes: [1], phases: [0] },
+            32
+          ).toCoefficients()
+          // Float32Array => precisão ~1e-7; compara em nível compatível
+          for (let n = 0; n <= 32; n++)
+            expect(mag(shifted, n)).toBeCloseTo(mag(base, n), 5)
         }
       )
     )
@@ -124,10 +144,15 @@ nomeia o `AC-NN`, afirma o campo alterado **e** que o resto não foi tocado, e t
 como imutável (helper `clone` via `JSON.parse(JSON.stringify(...))`). Inclui propriedade de
 pareamento `amplitudes.length === phases.length` após qualquer sequência de `add/removeHarmonic`.
 
-**Síntese** — `src/classes/fundamentalwave.test.ts`: comprimento do buffer (`minbuffer + 1`),
-amplitude normalizada em `[-1, 1]`, extremos próximos de zero (loop sem clique) e linearidade na
-intensidade como propriedade. Veja também `scalegenerator.test.ts`/`keyboard.test.ts` para
-afinação.
+**Timbre (áudio)** — `src/classes/hareom.test.ts`: por tipo, em quais harmônicos a energia cai
+(`square`/`tri` só ímpares, `saw` todos) e o decaimento (`1/k`, `1/k²`); e como propriedade, a
+linearidade no `gain`/amplitude e a preservação da magnitude sob variação de fase. Tudo no núcleo
+puro (`toCoefficients`), sem Web Audio.
+
+**Síntese (visualização)** — `src/classes/fundamentalwave.test.ts`: comprimento do buffer
+(`minbuffer + 1`), amplitude normalizada em `[-1, 1]`, extremos próximos de zero (loop sem clique)
+e linearidade na intensidade como propriedade. Veja também `scalegenerator.test.ts`/
+`keyboard.test.ts` para afinação.
 
 ## 5. Configuração e comandos
 

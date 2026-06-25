@@ -1,98 +1,100 @@
-# Pipeline de áudio — do ponto 0 ao AudioBuffer
+# Pipeline de áudio — da receita ao oscilador
 
 Mapa do caminho completo da geração de som no `harenator`, da "receita" (estado
-Redux) até o `AudioBuffer` que toca nos alto-falantes.
+Redux) até o `OscillatorNode` que toca nos alto-falantes.
 
 ## Visão geral
 
-O áudio **não é gerado quadro a quadro**. Para cada nota tocável (oitavas 3–4) é
-**pré-renderizado um buffer PCM de um ciclo inteiro**; tocar uma tecla apenas dá
-**loop** nesse buffer. Tudo re-renderiza quando a slice `recipe` muda. Motivação e
-trade-offs dessa escolha: **[ADR-0001](adr/0001-pcm-pre-renderizado-em-loop.md)**.
+O áudio **não é gerado quadro a quadro** nem pré-renderizado em PCM. A `recipe` é
+compilada **uma vez** num `PeriodicWave` (espectro de Fourier — parciais arbitrários
+com fases independentes); esse timbre **independe da nota**. Tocar uma tecla apenas cria
+um `OscillatorNode` leve e descartável, configura-o com o `PeriodicWave` e varia a
+frequência. Tudo recompila o timbre quando `recipe.waves` muda. Motivação e trade-offs
+dessa escolha: **[ADR-0003](adr/0003-sintese-por-oscilador-nativo.md)** (substitui o
+[ADR-0001](adr/0001-pcm-pre-renderizado-em-loop.md), que usava PCM pré-renderizado).
 
 ```
 PONTO 0 ─ RECEITA (Redux: store/reducers/recipe.ts)
-  SynthRecipe = { pitch, gain, scale, waves[] }
+  SynthRecipe = { pitch, gain, scale, octaves[], waves[] }
   cada wave = { type:sin|square|saw|tri, gain, phase, amplitudes[], phases[] }
         │
-        ├──────────────────────────────┬───────────────────────────────┐
-        ▼                              ▼                               ▼
-  ╔══ A. QUAIS NOTAS ══╗      ╔══ B. TAMANHO DO BUFFER ══╗     (recipe.waves = o timbre)
-  ║ scalegenerator.ts  ║      ║ minbuffersize.ts         ║
-  ║  razões das escalas║      ║  acha nº de ciclos inteiros║
-  ║  chromatic=12-TET  ║      ║  que cabem num buffer →    ║
-  ║  natural/pitagoric ║      ║  loop sem clique           ║
-  ║  = razões justas   ║      ║ {buffersize, num}          ║
-  ║        │           ║      ║        │                   ║
-  ║ keyboard.ts        ║      ║ useMinBufferSizeMap.ts     ║
-  ║  ancora em pitch   ║      ║  Map<freq → {buffersize,num}>║
-  ║  (Lá=440), gera     ║     ║  p/ cada freq (oitavas 3–4)║
-  ║  oitavas em Hz     ║      ╚════════════│═══════════════╝
-  ║ useKeyboard.ts     ║                   │
-  ║  keyboard[t][oit][n]║                  │
-  ╚═════════│══════════╝                  │
-            └──────────────┬──────────────┘
-                           ▼
-  ╔══════════ C. SÍNTESE / PCM ─ hooks/useSynth.ts (useMemo) ══════════╗
-  ║ p/ cada nota das oitavas 3–4 (naturais + acidentes):              ║
-  ║   fundamental.setMinBufferSize(buffersize, num)                    ║
-  ║   generateNote(recipe.waves, fundamental):                        ║
-  ║     p/ cada wave da receita → classes/fundamentalwave.ts          ║
-  ║       setIntensities(amplitudes) · setPhases(phases)              ║
-  ║       createContext(type) → wavelist = parciais                   ║
-  ║          parcial i usa mult. de freq (i+1)  ← série harmônica     ║
-  ║          sin / square(sign) / saw / tri                           ║
-  ║       getWave(gain, phase):                                       ║
-  ║          soma os parciais amostra-a-amostra (Fourier)            ║
-  ║          desloca fase global (rotaciona buffer) · × wave.gain     ║
-  ║     soma todas as waves amostra-a-amostra                        ║
-  ║     normaliza: ÷ (amplitude_pico/2)  → ~[-1, 1]                   ║
-  ║                                                                   ║
-  ║ Saída: naturalKeys[][]  ·  unnaturalKeys[][][]  (PCM por nota)    ║
-  ╚════════════════════════════════│══════════════════════════════════╝
+        ├──────────────────────────────────┬───────────────────────────────────┐
+        ▼                                  ▼                                    ▼
+  ╔══ A. QUAIS NOTAS ══╗          (recipe.waves = o timbre)          (recipe.gain = volume)
+  ║ scalegenerator.ts  ║                    │
+  ║  razões das escalas║                    ▼
+  ║  chromatic=12-TET  ║          ╔══════════ B. TIMBRE ─ classes/hareom.ts ══════════╗
+  ║  natural/pitagoric ║          ║ p/ cada wave da receita (HareOm):                 ║
+  ║  = razões justas   ║          ║   parcial i → harmônico (i+1)×fundamental         ║
+  ║        │           ║          ║   tipo expandido em série de Fourier band-limited ║
+  ║ keyboard.ts        ║          ║     sin  → só o harmônico 1                       ║
+  ║  ancora em pitch   ║          ║     square→ ímpares, 4/πk                         ║
+  ║  (Lá=440), gera     ║         ║     saw   → todos, 2/πk (alterna sinal)           ║
+  ║  oitavas em Hz     ║          ║     tri   → ímpares, 8/π²k²                       ║
+  ║ useKeyboard.ts     ║          ║   fase global ×n, fase do parcial ×k             ║
+  ║  keyboard[t][oit][n]║         ║   acumula em real[]/imag[]                        ║
+  ║        │           ║          ║                                                   ║
+  ║ useKeyboardLayout  ║          ║ hooks/useHareSynth.ts (useMemo em recipe.waves):  ║
+  ║  achata a faixa    ║          ║   SOMA os coeficientes de todas as waves          ║
+  ║  recipe.octaves →  ║          ║   audioCtx.createPeriodicWave(real, imag)         ║
+  ║  frequências (Hz)  ║          ╚════════════════════════│══════════════════════════╝
+  ╚═════════│══════════╝                                   │ 1 PeriodicWave (todo o timbre)
+            │ naturalFrequencies / unnaturalFrequencies    │
+            └──────────────────────┬────────────────────────┘
                                    ▼
-           containers/harenator → PianoKeyboard → PianoKey (props.wavedata = 1 PCM)
+           containers/harenator → PianoKeyboard → PianoKey (props.frequency, play, stop)
                                    │
-  ╔═══════════ D. REPRODUÇÃO ─ hooks/usePlayStop.ts ═══════════════════╗
-  ║ createBuffer(1ch, wave.length-1, sampleRate)  ← o AudioBuffer      ║
-  ║ preenche canal: nowBuffering[i] = wave[i] * 0.5 * gain             ║
-  ║ play():  source = createBufferSource()                            ║
-  ║          source.loop = true ; source.buffer = AudioBuffer          ║
-  ║          GainNode com rampa de attack (0→gain)                    ║
-  ║          source → gainNode → audioCtx.destination ; source.start() ║
-  ║ stop():  rampa de release (gain→0) ; stop()+disconnect            ║
-  ╚═══════════════════════════════════════════════════════════════════╝
+  ╔═══════════ C. REPRODUÇÃO ─ classes/haresom.ts (1 voz por keyid) ═══════════════════╗
+  ║ play(frequency):                                                                   ║
+  ║   osc = createOscillator() ; osc.setPeriodicWave(wave) ; osc.frequency = frequency ║
+  ║   gainNode com rampa de attack (0 → gain) ; gain = recipe.gain * 0.5              ║
+  ║   osc → gainNode → audioCtx.destination ; osc.start()                            ║
+  ║ stop():  rampa de release (gain → 0) ; osc.stop() ; descarta no onended           ║
+  ╚═══════════════════════════════════════════════════════════════════════════════════╝
                                    ▲
         Gatilho: tecla (mouse/QWERTY) → keyboardkeys (Redux)
-                 → PianoKey useEffect → play() / stop()
+                 → PianoKey useEffect → play(frequency, id) / stop(id)
 ```
 
-## As 4 etapas em palavras
+## As etapas em palavras
 
-**A — Quais frequências existem** (`scalegenerator.ts` → `keyboard.ts` → `useKeyboard`)
+**A — Quais frequências existem** (`scalegenerator.ts` → `keyboard.ts` → `useKeyboard`
+→ `useKeyboardLayout`)
 `ScaleGenerator` produz as *razões* de cada escala (cromática = temperamento igual
 `2^(1/12)`; natural/pitagórica = razões justas com 3 e 5). `Keyboard` ancora essas
 razões no `pitch` (Lá=440) e expande em oitavas, gerando frequências absolutas em
-Hz: `keyboard[tipo][oitava][nota]`.
+Hz: `keyboard[tipo][oitava][nota]`. `useKeyboardLayout` achata a faixa `recipe.octaves`
+em duas listas planas — `naturalFrequencies` e `unnaturalFrequencies` — paralelas por
+índice à renderização do teclado. Esta etapa diz apenas **quais** notas existem,
+independente da rota de síntese.
 
-**B — Tamanho do buffer** (`minbuffersize.ts` → `useMinBufferSizeMap`)
-Para uma dada frequência, acha quantos ciclos inteiros cabem num buffer de tamanho
-redondo (`{buffersize, num}`), garantindo que o loop emende sem clique.
-Pré-computado num `Map` para todas as notas tocáveis.
+**B — Timbre (compila o `PeriodicWave`)** (`hareom.ts` + `useHareSynth`) — *o coração*
+Cada `wave` da receita é compilada por um `HareOm` nos coeficientes de Fourier
+(`real`/`imag`): o parcial `i` vira o harmônico `(i+1)×fundamental` e o `type` é expandido
+em sua **série band-limited** (sem aliasing — `square`/`saw`/`tri` saem mais limpos que os
+geradores naïve). A fase global desloca o harmônico `n` por `n·phase`; a fase do parcial,
+por `k·phases[i]`. Dentro de um `useMemo` (recompila só quando `recipe.waves` muda),
+`useHareSynth` **soma os coeficientes de todas as waves** num só espectro e chama
+`audioCtx.createPeriodicWave(real, imag)`. Resultado: **um único `PeriodicWave`** que serve
+qualquer nota — o oscilador só varia a frequência. O `PeriodicWave` normaliza o pico para
+~1, então o volume absoluto vem do `GainNode` de cada voz (etapa C), não do espectro.
 
-**C — Síntese (gera o PCM)** (`useSynth` + `fundamentalwave.ts`) — *o coração*
-Dentro de um `useMemo`, para cada nota das oitavas 3–4: configura o buffer daquela
-frequência e chama `generateNote`. Para cada `wave` da receita, `FundamentalWave`
-monta os parciais (o parcial `i` tem multiplicador de frequência `i+1` — a série
-harmônica), `getWave` **soma os parciais amostra-a-amostra** (síntese de Fourier),
-aplica fase global e ganho. Soma todas as waves, **normaliza** pelo pico. Resultado:
-um array PCM por nota (`naturalKeys` / `unnaturalKeys`).
+**C — Reprodução** (`haresom.ts`, uma voz por `keyid`, orquestrada por `useHareSynth`)
+Cada tecla pressionada instancia uma `HareSom` monofônica (descartada no `stop`);
+**polifonia = uma voz por `keyid`**, num `Map` em `useHareSynth`. `play(frequency)` cria um
+`OscillatorNode` dedicado, aplica o `PeriodicWave` e a frequência, sobe o attack
+(`GainNode`, rampa linear de 0 a `recipe.gain * 0.5`) e liga ao `destination`. `stop()`
+desce o release e agenda `osc.stop()`, desconectando no `onended`. O oscilador é de uso
+único. Pressionar a tecla atualiza `keyboardkeys` no Redux, e um `useEffect` na tecla
+dispara `play(frequency, id)` / `stop(id)`.
 
-**D — Reprodução** (`usePlayStop` em cada `PianoKey`)
-O array PCM da nota vira um `AudioBuffer` (mono, `sampleRate`), preenchido com
-`wave[i] * 0.5 * gain`. Ao tocar: um `AudioBufferSourceNode` com `loop = true` →
-`GainNode` (rampa linear de attack/release) → `audioCtx.destination`. Pressionar a
-tecla atualiza `keyboardkeys` no Redux, e um `useEffect` dispara `play()`/`stop()`.
+> Mudar `recipe.waves` (timbre) ou `recipe.gain` (volume) **altera a nota já soando**:
+> `useHareSynth` propaga o `PeriodicWave` recompilado / o novo ganho às vozes ativas
+> (modulação ao vivo — **[ADR-0004](adr/0004-modulacao-ao-vivo.md)**). E o `AudioContext` pode
+> nascer `suspended` (autoplay policy), retomando no primeiro gesto do usuário.
 
 O fluxo é unidirecional: **`recipe` (Redux) → `classes/` (síntese) → `hooks/`
-(PCM + áudio) → UI**.
+(timbre + áudio) → UI**.
+
+> `FundamentalWave` **não** participa deste pipeline: é o motor de **visualização** das
+> ondas no editor (sample rate de tela), fora do caminho de áudio.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Aceito
+Substituído por [ADR-0003](0003-sintese-por-oscilador-nativo.md)
 
 ## Contexto
 

@@ -35,25 +35,25 @@ Referência canônica (pirâmide, escopo vivo + roadmap, convenções e exemplos
 
 ## Arquitetura e mapa do projeto
 
-Documentação detalhada (diagramas, fluxo de dados completo, tabela de camadas): **`docs/arquitetura.md`**. Stacks com versões e papel de cada dependência: **`docs/stacks.md`**. Pipeline de áudio passo a passo (receita → PCM → `AudioBuffer`, com diagrama das 4 etapas): **`docs/pipeline-audio.md`**. Vínculo posicional entre os PCM e as teclas (visuais + QWERTY): **`docs/keyboard.md`**. Decisões arquiteturais (o *porquê* datado e imutável de cada escolha estrutural; índice): **`docs/adr/README.md`**.
+Documentação detalhada (diagramas, fluxo de dados completo, tabela de camadas): **`docs/arquitetura.md`**. Stacks com versões e papel de cada dependência: **`docs/stacks.md`**. Pipeline de áudio passo a passo (receita → `PeriodicWave` → `OscillatorNode`, com diagrama das etapas): **`docs/pipeline-audio.md`**. Vínculo posicional entre as frequências e as teclas (visuais + QWERTY): **`docs/keyboard.md`**. Decisões arquiteturais (o *porquê* datado e imutável de cada escolha estrutural; índice): **`docs/adr/README.md`**.
 
-Cerne não óbvio: o áudio é PCM **pré-renderizado em loop**, não streaming quadro a quadro — quando a slice `recipe` muda, `useSynth` re-renderiza toda nota tocável (oitavas 3–4) e tocar uma tecla apenas repete esse buffer. Motivação e trade-offs: **[ADR-0001](docs/adr/0001-pcm-pre-renderizado-em-loop.md)**. Fluxo unidirecional: `recipe` (Redux) → `classes/` (síntese) → `hooks/` (pré-computa PCM + áudio) → `containers/`/`components/` (UI).
+Cerne não óbvio: o áudio usa o **oscilador nativo** (`OscillatorNode` + `PeriodicWave`), não PCM nem streaming quadro a quadro — quando a slice `recipe` muda, `useHareSynth` compila o timbre uma vez num `PeriodicWave` (independente da nota) e tocar uma tecla apenas dispara um oscilador leve nessa frequência. Motivação e trade-offs: **[ADR-0003](docs/adr/0003-sintese-por-oscilador-nativo.md)** (substitui o ADR-0001). Fluxo unidirecional: `recipe` (Redux) → `classes/` (síntese) → `hooks/` (compila timbre + áudio) → `containers/`/`components/` (UI).
 
 ### Esquema simplificado
 
-`store/reducers/` (recipe·keyboardkeys) · `classes/` (síntese·escalas·afinação) ·
-`hooks/` (PCM·áudio·input) · `utils/` (plot D3·buffer·helpers) · `components/` (UI folha)
+`store/reducers/` (recipe·keyboardkeys) · `classes/` (timbre·escalas·afinação·reprodução) ·
+`hooks/` (timbre·áudio·input·layout) · `utils/` (plot D3·helpers) · `components/` (UI folha)
 · `containers/` (layout) · `types/*.d.ts` (tipos globais, sem import). Árvore completa,
 papéis e diagramas: **`docs/arquitetura.md`**.
 
 ### Onde mexer
 
-- **Matemática da síntese** (harmônicos, soma de parciais, fase) → `classes/fundamentalwave.ts`. O parcial `i` usa multiplicador de frequência `i+1`; `getWave(gain, phase)` soma os parciais e desloca a fase; `setMinBufferSize` garante ciclos inteiros (loop sem cliques).
-- **Quais notas existem** (escalas `chromatic`/`natural`/`pitagoric`, afinação) → `classes/scalegenerator.ts` + `classes/keyboard.ts`. `useKeyboard` expõe `keyboard[0|1|2][oitava][nota]` (naturais / sustenidos / bemóis).
-- **Como o som se liga à tecla** (vínculo posicional por índice; `id` costura PCM + `pressed` no Redux + keycode QWERTY; ids `10X`/`11X` para bemóis/sustenidos) → `containers/pianokeyboard` + `components/pianokey` (brancas) + `components/blackpianokey` (pretas) + `store/reducers/keyboardkeys.ts`. Detalhes e mapa de índices: **`docs/keyboard.md`**.
-- **O que o som _é_** → slice `recipe` (`store/reducers/recipe.ts`): `pitch`, `gain`, `scale`, `waves[]` (cada wave: `type` `sin`/`square`/`saw`/`tri`, `gain`, `phase`, arrays paralelos `amplitudes[]`/`phases[]`).
-- **Pré-renderização e normalização do PCM** → `hooks/useSynth.ts` (`useMemo`, loop de oitavas `for i = 3; i < 5`, `generateNote`). Saída: `naturalKeys`/`unnaturalKeys` consumidos por `PianoKeyboard`. O caminho completo (receita → tamanho do buffer → síntese → reprodução) está em **`docs/pipeline-audio.md`**.
-- **Reprodução** (play/stop, envelope attack/release por rampa linear) → `hooks/usePlayStop.ts`.
+- **Matemática do timbre (áudio)** (harmônicos, soma de parciais, fase) → `classes/hareom.ts`. Compila um `WaveRecipe` nos coeficientes de Fourier (`real`/`imag`) de um `PeriodicWave`; o parcial `i` vira o harmônico `(i+1)×fundamental`, cada tipo expandido em série band-limited. A **visualização** das ondas no editor continua em `classes/fundamentalwave.ts` (em sample rate de tela, fora do caminho de áudio).
+- **Quais notas existem** (escalas `chromatic`/`natural`/`pitagoric`, afinação) → `classes/scalegenerator.ts` + `classes/keyboard.ts`. `useKeyboard` expõe `keyboard[0|1|2][oitava][nota]` (naturais / sustenidos / bemóis); `useKeyboardLayout` achata isso nas frequências tocáveis (faixa `recipe.octaves`).
+- **Como o som se liga à tecla** (vínculo posicional por índice; `id` costura a frequência da nota + `pressed` no Redux + keycode QWERTY; ids `10X`/`11X` para bemóis/sustenidos) → `containers/pianokeyboard` + `components/pianokey` (brancas) + `components/blackpianokey` (pretas) + `store/reducers/keyboardkeys.ts`. Detalhes e mapa de índices: **`docs/keyboard.md`**.
+- **O que o som _é_** → slice `recipe` (`store/reducers/recipe.ts`): `pitch`, `gain`, `scale`, `octaves` (faixa `[início, fim]`), `waves[]` (cada wave: `type` `sin`/`square`/`saw`/`tri`, `gain`, `phase`, arrays paralelos `amplitudes[]`/`phases[]`).
+- **Compilação do timbre e layout de notas** → `hooks/useHareSynth.ts` (`useMemo` sobre `recipe.waves`: soma os `HareOm` num só `PeriodicWave`; pool de vozes `Map<keyid, HareSom>`) e `hooks/useKeyboardLayout.ts` (quais notas existem por escala/oitava → frequências). O caminho completo (receita → timbre → oscilador → reprodução) está em **`docs/pipeline-audio.md`**.
+- **Reprodução** (play/stop, envelope attack/release por rampa linear, oscilador descartável) → `classes/haresom.ts`.
 
 ### Stacks (resumo)
 

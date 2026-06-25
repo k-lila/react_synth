@@ -37,7 +37,7 @@ de cada uma. Para a visão arquitetural, veja `docs/arquitetura.md`.
 
 | Stack | Versão | Papel |
 |-------|--------|-------|
-| **Web Audio API** | nativa (navegador) | Síntese aditiva e reprodução (`AudioBuffer`, `AudioBufferSourceNode`, `GainNode`). Sem dependência externa. |
+| **Web Audio API** | nativa (navegador) | Síntese aditiva e reprodução via oscilador nativo (`PeriodicWave`, `OscillatorNode`, `GainNode`). Sem dependência externa. |
 
 ## Tooling / Qualidade de código
 
@@ -66,9 +66,9 @@ de cada uma. Para a visão arquitetural, veja `docs/arquitetura.md`.
 | **@vitest/coverage-v8** | ^3.2.6 | Relatório de cobertura via engine V8 (`npm run coverage`). |
 | **fast-check** | ^4.8.0 | Testes baseados em propriedade para a matemática de síntese/escalas (invariantes sobre entradas geradas). |
 
-Testes ficam **co-located** (`*.test.ts` ao lado do fonte). Os hooks de áudio
-(`useSynth`/`usePlayStop`) ainda não são cobertos — dependem de um stub de Web Audio
-a ser introduzido depois.
+Testes ficam **co-located** (`*.test.ts` ao lado do fonte). O núcleo puro de timbre
+(`HareOm`) é coberto; a reprodução (`HareSom`) e os hooks de áudio (`useHareSynth`)
+dependem de um stub de Web Audio a ser introduzido depois.
 
 Convenções, a pirâmide aplicada ao projeto e o estado vivo da suíte: `docs/testes.md`.
 
